@@ -56,3 +56,13 @@ func get_random_room(nb_entries):
 	
 	var i=randi() % candidates.size()
 	return candidates[i]
+	
+
+func get_random_corridor():
+	var candidates=[]
+	for t in catalogue:
+		if t.connectors.size()==2 and t.size==0:
+			candidates.append(t)
+	
+	var i=randi() % candidates.size()
+	return candidates[i]

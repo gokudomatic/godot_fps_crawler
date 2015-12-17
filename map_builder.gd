@@ -4,6 +4,8 @@ extends Node
 const catalogue_class=preload("res://room_catalogue.gd")
 var catalogue=catalogue_class.new()
 
+var nb_rooms=0
+
 var max_rooms=100
 
 var map = []
@@ -21,9 +23,7 @@ func generate():
 	return generated_map
 	
 func step1():
-	
-	var nb_rooms=0
-	
+	nb_rooms=0
 	var first_room={id=nb_rooms,linked=[]}
 	map.append(first_room)
 	var nb_entries=randi() % (catalogue.MAX_ENTRIES-1) + 1
@@ -100,16 +100,40 @@ func step2():
 			var connector2=temp_r.free_connectors[iconn2]
 			temp_r.free_connectors.erase(connector2)
 			
-			var edge={
-				id=edge_id,
-				room1=temp_room,
-				room2=temp_r,
-				connector1=connector1,
-				connector2=connector2
-			}
-			edge_id+=1
-			
-			edge.room1.entries.append(edge)
-			edge.room2.entries.append(edge)
-	
+			if(randi()%2==0):
+				# direct link
+				var edge={id=edge_id,room1=temp_room,room2=temp_r,connector1=connector1,connector2=connector2}
+				edge_id+=1
+				edge.room1.entries.append(edge)
+				edge.room2.entries.append(edge)
+				
+			else:
+				# joint link
+				
+				nb_rooms+=1
+				var joint_room_template=catalogue.get_random_corridor()
+				var joint_connectors=[]
+				for c in joint_room_template.connectors:
+					joint_connectors.append(c)
+				var temp_link={
+					id=nb_rooms,
+					resource=joint_room_template.file,
+					entries=[],
+					free_connectors=joint_connectors
+				}
+				final_map.append(temp_link)
+				
+				var edge={id=edge_id,room1=temp_room,room2=temp_link,connector1=connector1,connector2=joint_connectors[0]}
+				edge_id+=1
+				edge.room1.entries.append(edge)
+				edge.room2.entries.append(edge)
+				
+				var edge2={id=edge_id,room1=temp_link,room2=temp_r,connector1=joint_connectors[1],connector2=connector2}
+				edge_id+=1
+				edge2.room1.entries.append(edge2)
+				edge2.room2.entries.append(edge2)
+				
 	return final_map
+
+	
+
