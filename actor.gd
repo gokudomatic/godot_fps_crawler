@@ -1,6 +1,7 @@
 
 extends KinematicBody
 
+var bullet_class=preload("res://projectiles/energy_blast.scn")
 
 var velocity=Vector3()
 var view_sensitivity = 0.3
@@ -9,6 +10,7 @@ var pitch = 0
 var is_moving=false
 var on_floor=false
 var jump_timeout=0
+var attack_timeout=0
 var fly_mode=false
 
 const WALK_MAX_SPEED = 15
@@ -18,6 +20,7 @@ const FLY_SPEED=100
 const FLY_ACCEL=4
 const GRAVITY=-9.8*3
 const MAX_JUMP_TIMEOUT=0.2
+const MAX_ATTACK_TIMEOUT=0.2
 const JUMP_SPEED = 3*3
 const MAX_SLOPE_ANGLE = 40
 const MAX_JUMP_TIMEOUT=0.2
@@ -38,7 +41,7 @@ func _input(ie):
 			var ray=get_node("yaw/camera/actionRay")
 			if ray.is_colliding():
 				var obj=ray.get_collider()
-
+	
 
 func _fixed_process(delta):
 	if fly_mode:
@@ -79,7 +82,7 @@ func _fly(delta):
 	if Input.is_action_pressed("quit"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		get_tree().quit()
-	
+
 	direction = direction.normalized()
 		
 	# calculate the target where the player want to move
@@ -112,6 +115,8 @@ func _walk(delta):
 	# process timers
 	if jump_timeout>0:
 		jump_timeout-=delta
+	if attack_timeout>0:
+		attack_timeout-=delta
 	
 	var ray = get_node("ray")
 	var step_ray=get_node("stepRay")
@@ -131,6 +136,14 @@ func _walk(delta):
 	if Input.is_action_pressed("quit"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		get_tree().quit()
+	if Input.is_action_pressed("attack") and attack_timeout<=0:
+		var bullet=bullet_class.instance()
+		var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
+		bullet.set_transform(transform.orthonormalized())
+		PS.body_add_collision_exception(bullet.get_rid(),get_rid())
+		get_parent_spatial().add_child(bullet)
+		#bullet.set_linear_velocity(transform.basis[2].normalized()*20)
+		attack_timeout=MAX_ATTACK_TIMEOUT
 	
 	#reset the flag for actor's movement state
 	is_moving=(direction.length()>0)
