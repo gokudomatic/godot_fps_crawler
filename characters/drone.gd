@@ -2,6 +2,11 @@
 extends RigidBody
 
 const ANGULAR_SPEED=4
+const VELOCITY_MAX=10
+const VELOCITY_ACCEL=0.1
+const TARGET_DISTANCE=4
+
+var going_backward=false
 
 func _ready():
 	# Initialization here
@@ -17,31 +22,34 @@ func _integrate_forces(state):
 	#lv += g*delta # Apply gravity
 	var up = -g.normalized()
 	
-	var current_t=state.get_transform()
+	var current_t=get_node("yaw").get_global_transform()
 	var current_pos=current_t.origin
-
-	var target=get_parent().get_node("player").get_translation()
-	var diff_v=(target+Vector3(0,2,0)-current_pos).normalized()
+	var current_z=current_t.basis.z
 	
-	var angle_y=Vector2(1,current_t.basis[2].y).angle_to(Vector2(1,diff_v.y))
-	var angle_x=Vector2(current_t.basis[2].x,current_t.basis[2].z).angle_to(Vector2(diff_v.x,diff_v.z))
+	var target=get_parent().get_node("player").get_global_transform().origin+Vector3(0,2,0)
+	var diff=current_pos-target
 	
+	var target_z=Transform().looking_at(diff,Vector3(0,1,0)).orthonormalized().basis.z
 	
-	if angle_x<-ANGULAR_SPEED*delta:
-		angle_x=-ANGULAR_SPEED
-	elif angle_x>ANGULAR_SPEED*delta:
-		angle_x=ANGULAR_SPEED
+	var vx=Vector2(current_z.x,current_z.z).angle_to(Vector2(target_z.x,target_z.z))
 	
-	var target_t=Transform().looking_at(-diff_v,Vector3(0,1,0))
-	target_t.origin=current_pos
+	state.set_angular_velocity(Vector3(0,vx*ANGULAR_SPEED,0))
+	get_node("yaw").set_rotation(Vector3(Vector2(1,0).angle_to(Vector2(1,target_z.y)),0,0))
 	
-#	set_transform(target_t)
+	var speed=lv.length()
+	if going_backward:
+		speed=-speed
+	print(speed,"   ",diff.length())
+	if diff.length()>TARGET_DISTANCE:
+		speed=min(speed+VELOCITY_ACCEL,VELOCITY_MAX)
+		going_backward=false
+	elif diff.length()<TARGET_DISTANCE-2:
+		speed=max(speed-VELOCITY_ACCEL,-VELOCITY_MAX)
+		going_backward=true
+	elif abs(speed)>0.1:
+		speed*=0.9
+	else:
+		speed=0
 	
-	#lv=diff_v
-	#state.set_linear_velocity(Vector3(0,0,1))
-	av.y=angle_x
-	av.x=angle_y
-	state.set_angular_velocity(av*delta*50)
-
-	
+	set_linear_velocity(current_z*speed)
 	
