@@ -137,13 +137,7 @@ func _walk(delta):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		get_tree().quit()
 	if Input.is_action_pressed("attack") and attack_timeout<=0:
-		var bullet=bullet_class.instance()
-		var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
-		bullet.set_transform(transform.orthonormalized())
-		PS.body_add_collision_exception(bullet.get_rid(),get_rid())
-		get_parent_spatial().add_child(bullet)
-		#bullet.set_linear_velocity(transform.basis[2].normalized()*20)
-		attack_timeout=MAX_ATTACK_TIMEOUT
+		shoot()
 	
 	#reset the flag for actor's movement state
 	is_moving=(direction.length()>0)
@@ -262,3 +256,15 @@ func _on_ladders_body_enter( body ):
 func _on_ladders_body_exit( body ):
 	if body==self:
 		fly_mode=false
+
+func shoot():
+	var bullet=bullet_class.instance()
+	var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
+	bullet.set_transform(transform.orthonormalized())
+	bullet.owner=self
+	get_parent_spatial().add_child(bullet)
+	attack_timeout=MAX_ATTACK_TIMEOUT
+
+func hit(source):
+	#print("wounded")
+	pass
