@@ -3,6 +3,8 @@ extends Area
 
 var owner=null
 
+var velocity=Vector3()
+
 func _ready():
 	set_process(true)
 	
@@ -11,7 +13,7 @@ func _process(delta):
 	var direction=Vector3()
 	direction-=aim[2]
 	direction = direction.normalized()
-	var velocity=direction*40
+	velocity=direction*40
 	
 	var motion=velocity*delta
 	set_translation(get_translation()+motion)
