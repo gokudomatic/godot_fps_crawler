@@ -68,6 +68,9 @@ func step2():
 	
 	for room in map:
 		var room_template=catalogue.get_random_room(room.linked.size())
+		var n_npc=0
+		if room_template.max_npc>0:
+			n_npc=randi()%(room_template.max_npc+1)
 		var free_connectors=[]
 		for c in room_template.connectors:
 			free_connectors.append(c)
@@ -75,7 +78,9 @@ func step2():
 			id=room_template.id,
 			resource=room_template.file,
 			entries=[],
-			free_connectors=free_connectors
+			nb_npc=n_npc,
+			free_connectors=free_connectors,
+			spawn_points=room_template.spawn_points
 		}
 		
 	while to_process.size()>0:
@@ -119,7 +124,9 @@ func step2():
 					id=nb_rooms,
 					resource=joint_room_template.file,
 					entries=[],
-					free_connectors=joint_connectors
+					nb_npc=0,
+					free_connectors=joint_connectors,
+					spawn_points=[]
 				}
 				final_map.append(temp_link)
 				

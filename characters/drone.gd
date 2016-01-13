@@ -8,7 +8,7 @@ const VELOCITY_MAX=10
 const VELOCITY_ACCEL=0.05
 const TARGET_DISTANCE=4
 const SHOOT_RECHARGE_TIME=1
-const MAXIMUM_SHOOTS=5
+const MAXIMUM_SHOOTS=3
 
 const shoot_points=["yaw/shoot_point_1","yaw/shoot_point_2","yaw/shoot_point_3","yaw/shoot_point_4"]
 
@@ -22,6 +22,7 @@ var can_see_target=false
 var remaining_shots=0
 var current_direction=Vector3()
 var distance_to_collision=0
+var alive=true
 
 var life=100
 var current_action={
@@ -41,6 +42,9 @@ func _ready():
 	collision_ray.add_exception_rid(get_rid())
 
 func _integrate_forces(state):
+	if not alive:
+		return
+	
 	if target_ray.is_colliding():
 		distance_to_collision=(target_ray.get_collision_point()-target_ray.get_global_transform().origin).length()
 	else:
@@ -70,7 +74,6 @@ func _integrate_forces(state):
 
 
 func shoot():
-	#print(current_target)
 	var bullet=bullet_class.instance()
 	var shoot_point=shoot_points[randi()%4]
 	var transform=get_node(shoot_point).get_global_transform()
@@ -80,10 +83,16 @@ func shoot():
 
 
 func hit(source):
-	print("being hit")
-	print(source.velocity)
 	set_linear_velocity(get_linear_velocity()+source.velocity.normalized()*10)
-	create_sleep_action()
+	if alive:
+		life=life-20
+		if life<=0:
+			# die
+			die()
+		else:
+			# hurt
+			#change quota
+			create_sleep_action()
 
 func do_current_action(state):
 	
@@ -199,3 +208,9 @@ func create_attack_target_action():
 		follow_target=true
 	}
 	remaining_shots=randi()%MAXIMUM_SHOOTS+1
+
+func die():
+	set_mode(MODE_RIGID)
+	set_use_custom_integrator(false)
+	get_node("yaw/reactor").set_emitting(false)
+	alive=false

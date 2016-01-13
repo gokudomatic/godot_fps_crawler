@@ -12,6 +12,7 @@ var map_doors={}
 var test1={}
 
 const map_builder_class=preload("res://map_builder.gd")
+const drone_class=preload("res://characters/drone.scn")
 
 var door_template = preload("res://door-1.scn")
 
@@ -19,7 +20,6 @@ var door_template = preload("res://door-1.scn")
 func _ready():
 	
 	_generate_map()
-	#_create_map()
 	
 	for m in map_rooms:
 		if not m.resource in loaded_templates:
@@ -32,52 +32,6 @@ func _generate_map():
 	map_rooms=builder.generate()
 	print("map size: ",map_rooms.size())
 
-
-func _create_map():
-	for i in range(10):
-		var res="corridor-1.scn"
-		if i%2==0:
-			res="room-4-1.scn"
-		var room={
-			id=i,
-			resource=res,
-			entries=[]
-		}
-		map_rooms.append(room)
-		
-	for i in range(9):
-		var edge={
-			room1=map_rooms[i],
-			room2=map_rooms[i+1],
-			connector1="connector-W1",
-			connector2="connector-E1"
-		}
-		
-		edge.room1.entries.append(edge)
-		edge.room2.entries.append(edge)
-	
-	var first_room=map_rooms[0]
-	var roomS={
-		id="FS",
-		resource="corridor-1.scn",
-		entries=[]
-	}
-	map_rooms.append(roomS)
-	var roomN={
-		id="FN",
-		resource="room-1-1.scn",
-		entries=[]
-	}
-	map_rooms.append(roomN)
-	var roomE={
-		id="FE",
-		resource="corridor-1.scn",
-		entries=[]
-	}
-	map_rooms.append(roomE)
-	make_edge(first_room,roomS,"connector-S1","connector-E1")
-	make_edge(first_room,roomN,"connector-N1","connector-E1")
-	make_edge(first_room,roomE,"connector-E1","connector-W1")
 
 func make_edge(room1,room2,conn1,conn2):
 	var edge={
@@ -103,6 +57,7 @@ func load_first_room():
 	add_child(room_node)
 	_load_contingent_rooms(room_node)
 	load_room_doors(room_node)
+	load_room_npc(room_node)
 
 func load_room_doors(room):
 	var room_data=room.map_data
@@ -119,6 +74,24 @@ func load_room_doors(room):
 		
 		map_doors[e.id]=door
 		
+
+func load_room_npc(room):
+	var room_data=room.map_data
+	var spawn_points=room_data.spawn_points
+	var available_points=[]
+	for i in spawn_points:
+		available_points.append(i)
+	var nb_npc=room_data.nb_npc
+	for i in range(nb_npc):
+		var npc=drone_class.instance()
+		room.npc_list.append(npc)
+		var id=randi()%available_points.size()
+		var sp_name=available_points[id]
+		available_points.remove(id)
+		var sp=room.get_node(sp_name)
+		var t=sp.get_global_transform()
+		npc.set_translation(t.origin)
+		add_child(npc)
 
 func _load_contingent_rooms(origin_room):
 	var room_data=origin_room.map_data
@@ -145,6 +118,7 @@ func _load_contingent_rooms(origin_room):
 		loaded_rooms_data.append(new_room.map_data)
 		
 		load_room_doors(new_room)
+		load_room_npc(new_room)
 
 
 func recenter_node(origin_node,origin_connector_name,dest_node,dest_connector_name):
@@ -183,6 +157,10 @@ func _remove_far_rooms(previous_room,new_room):
 				nodes_to_remove.append(node)
 	
 	for node in nodes_to_remove:
+		
+		for npc in node.npc_list:
+			npc.queue_free()
+		
 		for e in node.map_data.entries:
 			if e.id in map_doors and not (e.room1 in loaded_rooms_data and e.room2 in loaded_rooms_data):
 				map_doors[e.id].queue_free()

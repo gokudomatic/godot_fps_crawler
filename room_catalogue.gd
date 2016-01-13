@@ -11,41 +11,53 @@ func _init():
 		id="room-4-1",
 		file="room-4-1.scn",
 		size=1,
-		connectors=["connector-E1","connector-S1","connector-W1","connector-N1"]
+		max_npc=4,
+		connectors=["connector-E1","connector-S1","connector-W1","connector-N1"],
+		spawn_points=["spawn-1","spawn-2","spawn-3","spawn-4","spawn-5"]
 	})
 	
 	catalogue.append({
 		id="room-3-1",
 		file="room-3-1.scn",
 		size=1,
-		connectors=["connector-E1","connector-S1","connector-W1"]
+		max_npc=1,
+		connectors=["connector-E1","connector-S1","connector-W1"],
+		spawn_points=["spawn-1"]
 	})
 
 	catalogue.append({
 		id="room-2-1",
 		file="room-2-1.scn",
 		size=1,
-		connectors=["connector-E1","connector-W1"]
+		max_npc=1,
+		connectors=["connector-E1","connector-W1"],
+		spawn_points=["spawn-1"]
 	})
 	catalogue.append({
 		id="room-2-2",
 		file="room-2-2.scn",
 		size=1,
-		connectors=["connector-E1","connector-S1"]
+		max_npc=1,
+		connectors=["connector-E1","connector-S1"],
+		spawn_points=["spawn-1"]
 	})
 
 	catalogue.append({
 		id="room-1-1",
 		file="room-1-1.scn",
 		size=1,
-		connectors=["connector-E1"]
+		max_npc=1,
+		connectors=["connector-E1"],
+		spawn_points=["spawn-1"]
 	})
 
 	catalogue.append({
 		id="corridor-1",
 		file="corridor-1.scn",
 		size=0,
-		connectors=["connector-E1","connector-W1"]
+		max_npc=0,
+		connectors=["connector-E1","connector-W1"],
+		spawn_points=[]
 	})
 
 func get_random_room(nb_entries):
@@ -56,7 +68,6 @@ func get_random_room(nb_entries):
 	
 	var i=randi() % candidates.size()
 	return candidates[i]
-	
 
 func get_random_corridor():
 	var candidates=[]
