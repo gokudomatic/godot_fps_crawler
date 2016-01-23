@@ -2,6 +2,7 @@
 extends Area
 
 var owner=null
+var power=20
 
 var velocity=Vector3()
 
@@ -19,7 +20,7 @@ func _process(delta):
 	set_translation(get_translation()+motion)
 
 func _on_bullet_body_enter( body ):
-	if body!=owner:
+	if body!=owner and not (body in get_tree().get_nodes_in_group("npc-wall")):
 		if body.has_method("hit"): 
 			body.hit(self)
 		queue_free()

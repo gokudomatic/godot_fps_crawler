@@ -12,6 +12,9 @@ var on_floor=false
 var jump_timeout=0
 var attack_timeout=0
 var fly_mode=false
+var alive=true
+
+var aim_offset=Vector3(0,1.5,0)
 
 const WALK_MAX_SPEED = 15
 const ACCEL= 2
