@@ -149,8 +149,11 @@ func do_current_action(state):
 		var lv1=lv-current_direction*VELOCITY_ACCEL
 		if lv1.length()>VELOCITY_MAX:
 			lv1=lv1.normalized()*VELOCITY_MAX
-		#var speed=min(lv.length()+VELOCITY_ACCEL,VELOCITY_MAX)
-		#set_linear_velocity(-current_direction*speed)
+		
+		if state.get_contact_count()>0:
+			var normal=state.get_contact_local_normal(0)
+			lv1=normal.slide(lv1)
+		
 		set_linear_velocity(lv1)
 	else:
 		#slow down to halt
@@ -276,7 +279,6 @@ func create_attack_target_action():
 	remaining_shots=randi()%MAXIMUM_SHOOTS+1
 
 func die():
-	print("dead")
 	set_mode(MODE_RIGID)
 	set_use_custom_integrator(false)
 	get_node("yaw/reactor").set_emitting(false)
