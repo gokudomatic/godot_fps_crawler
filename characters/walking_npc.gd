@@ -3,7 +3,7 @@ extends RigidBody
 const ANGULAR_SPEED=4
 const VELOCITY_MAX=10
 const VELOCITY_ACCEL=0.05
-const TARGET_DISTANCE=4
+const TARGET_DISTANCE=2
 const SHOOT_RECHARGE_TIME=1
 const MAX_LIFE=100
 const WAYPOINT_ERROR_DELTA=1
@@ -26,6 +26,7 @@ var alive=true
 var no_move=false
 var hit_quotas=Dictionary()
 var waypoint_timeout=0
+var model=null
 
 var m = FixedMaterial.new()
 
@@ -53,6 +54,9 @@ var is_moving = false;
 var on_floor = false;
 
 func _ready():
+	model=get_node("yaw/adapter/Escarabajo")
+	model.owner=self
+	
 	m.set_line_width(3)
 	m.set_point_size(3)
 	m.set_fixed_flag(FixedMaterial.FLAG_USE_POINT_SIZE, true)
@@ -63,8 +67,6 @@ func _ready():
 	player=get_parent().get_node("player")
 	target_ray=get_node("target_ray")
 	target_ray.add_exception_rid(get_rid())
-	#collision_ray=get_node("collision_ray")
-	#collision_ray.add_exception_rid(get_rid())
 	
 	for n in get_tree().get_nodes_in_group("npc-wall"):
 		target_ray.add_exception_rid(n.get_rid())
@@ -75,8 +77,11 @@ func _integrate_forces(state):
 	if not alive:
 		return
 	
-	if target_ray.is_colliding():
-		distance_to_collision=(target_ray.get_collision_point()-target_ray.get_global_transform().origin).length()
+	if target_ray.is_colliding() and current_target!=null and target_ray.get_collider()==current_target:
+			distance_to_collision=(target_ray.get_collision_point()-target_ray.get_global_transform().origin).length()
+		
+			if current_action.name!="attack" and distance_to_collision<=TARGET_DISTANCE:
+				create_attack_target_action()
 	else:
 		distance_to_collision=-1
 	
@@ -101,7 +106,7 @@ func _integrate_forces(state):
 		if v.length()<0.53:
 			current_target=player
 	
-	if action_timeout<=0 and remaining_shots<=0:
+	if action_timeout<=0:
 		change_action(state)
 	else:
 		action_timeout-=state.get_step()
@@ -111,10 +116,6 @@ func _integrate_forces(state):
 			calculate_destination()
 		else:
 			waypoint_timeout-=state.get_step()
-
-	#if not get_node("yaw/floor_ray").is_colliding():
-	#	avoid_fall()
-
 	
 	do_current_action(state)
 	
@@ -162,7 +163,10 @@ func do_current_action(state):
 		target_z=target_ray.get_global_transform().basis.z
 	else:
 		if current_waypoint!=null:
-			var tt=current_t.looking_at(current_waypoint+current_target.aim_offset,Vector3(0,1,0))
+			var offset=Vector3(0,0,0)
+			if current_target!=null:
+				offset=current_target.aim_offset
+			var tt=current_t.looking_at(current_waypoint+offset,Vector3(0,1,0))
 			target_z=tt.basis.z
 		else:
 			target_z=current_direction
@@ -173,7 +177,6 @@ func do_current_action(state):
 	 
 	if not aiming_at_target:
 		vx=sign(vx)
-	
 		
 	
 	state.set_angular_velocity(Vector3(0,vx*ANGULAR_SPEED,0))
@@ -181,39 +184,42 @@ func do_current_action(state):
 	var vel_speed=state.get_linear_velocity().length()/walk_speed;
 	
 	var speed=state.get_angular_velocity().length()*0.1+vel_speed;
-	get_node("yaw/Escarabajo").set_walk_speed(speed)
+	model.set_walk_speed(speed)
 
 func calculate_destination():
+	var offset=Vector3(0,0,0)
+	
 	if current_target!=null and navmesh!=null:
 		if current_waypoint==null or (current_waypoint-get_translation()).length()<WAYPOINT_ERROR_DELTA or waypoint_timeout<=0:
 			_update_waypoint()
 		
-		current_direction=get_global_transform().looking_at(current_waypoint+current_target.aim_offset,Vector3(0,1,0)).orthonormalized().basis.z
+		offset=current_target.aim_offset
 	else:
-		current_direction=get_global_transform().basis.z
-	
-		var angle_x=randf()*PI
-		var y=random_angle_a/(angle_x+0.3926875)-0.3426875
-		if y<0.17:
-			y=0
-		else:
-			if randi()%2==1:
-				y=-y
-		var angle_diff=y
+		var curr_pos=get_global_transform().origin
 		
-		current_direction=current_direction.rotated(Vector3(0,1,0),angle_diff)
+		var a=(randf()*2-1)*PI
+		var candidate_dir=Vector3(0,0,-2).rotated(Vector3(0,1,0),a)
+		current_waypoint=navmesh.get_closest_point(curr_pos+candidate_dir)
+		waypoint_timeout=WAYPOINT_MAX_TIMEOUT
+	
+	var old_direction=current_direction
+	current_direction=get_global_transform().looking_at(current_waypoint+offset,Vector3(0,1,0)).orthonormalized().basis.z
+	var dist=(current_direction+old_direction).length()
+	if dist<1.2:
+		create_turn_action()
+
 
 func change_action(state):
 	if current_target==null:
 		if randi()%3==0:
-			create_move_action(state)
+			create_move_action()
 		else:
 			create_sleep_action()
 	else:
 		if can_see_target and get_translation().distance_to(current_target.get_global_transform().origin)<TARGET_DISTANCE:
 			create_attack_target_action()
 		else:
-			create_move_action(state)
+			create_move_action()
 
 func create_sleep_action():
 	current_action={
@@ -224,7 +230,7 @@ func create_sleep_action():
 	}
 	action_timeout=0.2
 
-func create_move_action(state):
+func create_move_action():
 	calculate_destination()
 	current_action={
 		name="move",
@@ -234,6 +240,17 @@ func create_move_action(state):
 	}
 	action_timeout=2
 
+func create_turn_action():
+	calculate_destination()
+	current_action={
+		name="turn",
+		shoot=false,
+		move=false,
+		follow_target=false
+	}
+	action_timeout=1
+
+
 func create_attack_target_action():
 	current_action={
 		name="attack",
@@ -241,7 +258,8 @@ func create_attack_target_action():
 		move=false,
 		follow_target=true
 	}
-	action_timeout=2
+	action_timeout=10
+	attack()
 
 func hit(source):
 	
@@ -310,17 +328,11 @@ func _update_waypoint():
 			current_path=Array(p)
 			current_waypoint=current_path[1]
 	
-	#var im = navmesh.get_node("draw")
-	#im.set_material_override(m)
-	#im.clear()
-	#im.begin(Mesh.PRIMITIVE_POINTS, null)
-	#im.add_vertex(begin)
-	#im.add_vertex(end)
-	#im.end()
-	#im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
-	#for x in p:
-	#	im.add_vertex(x)
-	#im.end()
-	
 	waypoint_timeout=WAYPOINT_MAX_TIMEOUT
 
+func attack():
+	model.attack(randi()%2)
+	pass
+
+func end_attack():
+	action_timeout=0

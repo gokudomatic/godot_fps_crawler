@@ -269,5 +269,5 @@ func shoot():
 	attack_timeout=MAX_ATTACK_TIMEOUT
 
 func hit(source):
-	#print("wounded")
+	print("wounded")
 	pass
