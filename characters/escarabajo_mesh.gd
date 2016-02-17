@@ -18,15 +18,32 @@ func set_walk_speed(val):
 		tree.blend2_node_set_amount('walk',val)
 
 func attack(atk_type):
+	special(atk_type)
+
+func special(spe_type):
 	set_walk_speed(0)
-	tree.mix_node_set_amount("attack",1)
-	tree.transition_node_set_current("attack_type",atk_type)
-	tree.timeseek_node_seek("attackSeek",0)
+	tree.mix_node_set_amount("specialMix",1)
+	tree.transition_node_set_current("specialType",spe_type)
+	tree.timeseek_node_seek("specialSeek",0)
+
+func hit():
+	special(2)
+
+func die():
+	special(3)
 
 func end_attack():
-	tree.mix_node_set_amount("attack",0)
+	tree.mix_node_set_amount("specialMix",0)
 	owner.end_attack()
 
 func _on_hit_area_body_enter( body ):
 	if body!=owner and body.has_method("hit"): 
 		body.hit(self)
+		
+func end_hit():
+	tree.mix_node_set_amount("specialMix",0)
+
+func end_die():
+	print("dead")
+	get_node("AnimationTreePlayer").set_active(false)
+	get_node("AnimationPlayer").set_active(false)

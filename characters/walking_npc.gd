@@ -263,6 +263,8 @@ func create_attack_target_action():
 
 func hit(source):
 	
+	
+	
 	if alive:
 		life=life-20
 		if life<=0:
@@ -270,6 +272,7 @@ func hit(source):
 			die()
 		else:
 			# hurt
+			model.hit()
 			create_sleep_action()
 	
 	var culprit=source.owner
@@ -281,7 +284,6 @@ func hit(source):
 				hit_quotas.clear()
 		else:
 			if current_target==null:
-				print(get_name()," attaqued by ",culprit.get_name())
 				current_target=culprit
 			else:
 				hit_quotas[culprit]=source.power
@@ -295,7 +297,9 @@ func avoid_fall():
 func die():
 	#set_mode(MODE_RIGID) # set ragdoll mode
 	set_use_custom_integrator(false)
+	set_layer_mask(1024)
 	alive=false
+	model.die()
 
 func _update_waypoint():
 	var begin=navmesh.get_closest_point(get_translation())
