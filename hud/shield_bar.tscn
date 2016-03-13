@@ -2,9 +2,18 @@
 
 [ext_resource path="res://hud/shield_bar.gd" type="Script" id=1]
 
-[node name="shield_bar" type="Node2D"]
+[node name="shield_bar" type="Control"]
 
+rect/min_size = Vector2( 496, 64 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
 script/script = ExtResource( 1 )
 value = 100
+lifes = 3
+halign = 0
+color_shield = Color( 0.119751, 0.148337, 0.851562, 1 )
+color_life = Color( 0.119751, 0.148337, 0.851562, 1 )
 
 
