@@ -15,6 +15,15 @@ func _init():
 		connectors=["connector-E1","connector-S1","connector-W1","connector-N1"],
 		spawn_points=["spawn-1","spawn-2","spawn-3","spawn-4","spawn-5"]
 	})
+
+	catalogue.append({
+		id="room-4-2",
+		file="room-4-2.scn",
+		size=1,
+		max_npc=1,
+		connectors=["connector-1","connector-2","connector-3","connector-4"],
+		spawn_points=["spawn-1"]
+	})
 	
 	catalogue.append({
 		id="room-3-1",
@@ -22,6 +31,15 @@ func _init():
 		size=1,
 		max_npc=1,
 		connectors=["connector-E1","connector-S1","connector-W1"],
+		spawn_points=["spawn-1"]
+	})
+
+	catalogue.append({
+		id="room-3-4",
+		file="room-3-4.scn",
+		size=1,
+		max_npc=1,
+		connectors=["connector-E1","connector-E2","connector-E3"],
 		spawn_points=["spawn-1"]
 	})
 
@@ -41,6 +59,22 @@ func _init():
 		connectors=["connector-E1","connector-S1"],
 		spawn_points=["spawn-1"]
 	})
+	catalogue.append({
+		id="room-2-3",
+		file="room-2-3.scn",
+		size=1,
+		max_npc=1,
+		connectors=["connector-E1","connector-W1"],
+		spawn_points=["spawn-1"]
+	})
+	catalogue.append({
+		id="room-2-4",
+		file="room-2-4.scn",
+		size=1,
+		max_npc=1,
+		connectors=["connector-E1","connector-W1"],
+		spawn_points=["spawn-1"]
+	})
 
 	catalogue.append({
 		id="room-1-1",
@@ -50,6 +84,16 @@ func _init():
 		connectors=["connector-E1"],
 		spawn_points=["spawn-1"]
 	})
+
+	catalogue.append({
+		id="room-1-3",
+		file="room-1-3.scn",
+		size=1,
+		max_npc=1,
+		connectors=["connector-1"],
+		spawn_points=["spawn-1"]
+	})
+
 
 	catalogue.append({
 		id="corridor-1",

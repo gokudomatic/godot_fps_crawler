@@ -1,7 +1,7 @@
 
 extends Node
 
-const catalogue_class=preload("res://room_catalogue.gd")
+const catalogue_class=preload("res://rooms/room_catalogue.gd")
 var catalogue=catalogue_class.new()
 
 var nb_rooms=0

@@ -105,6 +105,7 @@ func _integrate_forces(state):
 		var v=target_transform.basis.z-yaw_t.basis.z
 		if v.length()<0.53:
 			current_target=player
+			print("see player")
 	
 	if action_timeout<=0:
 		change_action(state)
@@ -302,15 +303,23 @@ func die():
 	model.die()
 
 func _update_waypoint():
-	var begin=navmesh.get_closest_point(get_translation())
-	var end=navmesh.get_closest_point(current_target.get_global_transform().origin)
+	#convert start and end points to local
+	var navt=navmesh.get_global_transform()
+	var local_begin=navt.xform_inv(get_global_transform().origin)
+	var local_end=navt.xform_inv(current_target.get_global_transform().origin)
+	
+	var begin=navmesh.get_closest_point(local_begin)
+	var end=navmesh.get_closest_point(local_end)
 	var p=navmesh.get_simple_path(begin,end, true)
 	
 	var path=Array(p)
 	
 	if current_path==null or current_path.size()<3:
 		current_path=path
-		current_waypoint=path[1]
+		if current_path.size()==0:
+			current_waypoint=navt.xform(end)
+		else:
+			current_waypoint=navt.xform(path[1])
 	else:
 		#remove begin and end
 		path.pop_back()
@@ -327,10 +336,10 @@ func _update_waypoint():
 		
 		if found:
 			current_path.pop_front()
-			current_waypoint=current_path[1]
+			current_waypoint=navt.xform(current_path[1])
 		else:
 			current_path=Array(p)
-			current_waypoint=current_path[1]
+			current_waypoint=navt.xform(current_path[1])
 	
 	waypoint_timeout=WAYPOINT_MAX_TIMEOUT
 

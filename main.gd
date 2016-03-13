@@ -11,10 +11,11 @@ var map_rooms=[]
 var map_doors={}
 var test1={}
 
-const map_builder_class=preload("res://map_builder.gd")
+const map_builder_class=preload("res://rooms/map_builder.gd")
 const drone_class=preload("res://characters/drone.scn")
+const walker_class=preload("res://characters/actor_escarabajo.scn")
 
-var door_template = preload("res://door-1.scn")
+var door_template = preload("res://rooms/door-1.scn")
 
 
 func _ready():
@@ -23,7 +24,7 @@ func _ready():
 	
 	for m in map_rooms:
 		if not m.resource in loaded_templates:
-			loaded_templates[m.resource]=load("res://"+m.resource)
+			loaded_templates[m.resource]=load("res://rooms/"+m.resource)
 	
 	load_first_room()
 
@@ -83,7 +84,13 @@ func load_room_npc(room):
 		available_points.append(i)
 	var nb_npc=room_data.nb_npc
 	for i in range(nb_npc):
-		var npc=drone_class.instance()
+		var navmesh=room.get_navmesh()
+		var npc
+		if navmesh!=null:
+			npc=walker_class.instance()
+			npc.navmesh=navmesh
+		else:
+			npc=drone_class.instance()
 		room.npc_list.append(npc)
 		var id=randi()%available_points.size()
 		var sp_name=available_points[id]
