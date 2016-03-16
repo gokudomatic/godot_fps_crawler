@@ -19,6 +19,7 @@ var door_template = preload("res://rooms/door-1.scn")
 
 
 func _ready():
+	get_node("/root/global").player_data.shield_hud=get_node("CanvasLayer/shield_bar")
 	
 	_generate_map()
 	

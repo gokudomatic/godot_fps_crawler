@@ -14,6 +14,8 @@ var attack_timeout=0
 var fly_mode=false
 var alive=true
 
+var player_data
+
 var aim_offset=Vector3(0,1.5,0)
 
 const WALK_MAX_SPEED = 15
@@ -26,11 +28,10 @@ const MAX_JUMP_TIMEOUT=0.2
 const MAX_ATTACK_TIMEOUT=0.2
 const JUMP_SPEED = 3*3
 const MAX_SLOPE_ANGLE = 40
-const MAX_JUMP_TIMEOUT=0.2
 const STAIR_RAYCAST_HEIGHT=0.75
 const STAIR_RAYCAST_DISTANCE=0.58
 const STAIR_JUMP_SPEED=5
-const STAIR_JUMP_TIMEOUT=0.2
+const STAIR_JUMP_TIMEOUT=0.1
 
 func _input(ie):
 	if ie.type == InputEvent.MOUSE_MOTION:
@@ -53,6 +54,8 @@ func _fixed_process(delta):
 		_walk(delta)
 
 func _ready():
+	player_data=get_node("/root/global").player_data
+	
 	get_node("yaw/camera/actionRay").add_exception(self)
 	
 	set_fixed_process(true)
@@ -166,6 +169,7 @@ func _walk(delta):
 		if is_moving and step_ray.is_colliding():
 			var step_normal=step_ray.get_collision_normal()
 			if (rad2deg(acos(step_normal.dot(Vector3(0,1,0))))< MAX_SLOPE_ANGLE):
+				print("climb stair")
 				velocity.y=STAIR_JUMP_SPEED
 				jump_timeout=STAIR_JUMP_TIMEOUT
 		
@@ -269,5 +273,4 @@ func shoot():
 	attack_timeout=MAX_ATTACK_TIMEOUT
 
 func hit(source):
-	print("wounded")
-	pass
+	player_data.hit(30)
