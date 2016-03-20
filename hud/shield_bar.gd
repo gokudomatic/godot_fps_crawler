@@ -1,24 +1,27 @@
 tool
 extends Control
 
-var img=preload("res://textures/hud/shield_bar.png")
+var img_shield=preload("res://textures/hud/shield_bar.png")
+var img_empty_shield=preload("res://textures/hud/empty_shield_bar1.png")
 var img_life=preload("res://textures/hud/life_bar.png")
 export(int,100) var value=100 setget _set_value
 export(int) var lifes=3 setget _set_life
 
 export(int, "Left", "Center", "Right") var halign=0 setget _set_halign
 var texture
+var texture_empty_shield
 var texture_life
 
 export(Color) var color_shield=Color(1,1,1,1) setget _set_color_shield
 export(Color) var color_life=Color(1,1,1,1) setget _set_color_life
 
 func _ready():
-	#value=100
 	texture=ImageTexture.new()
-	texture.create_from_image(img.get_data())
+	texture.create_from_image(img_shield.get_data())
 	texture_life=ImageTexture.new()
 	texture_life.create_from_image(img_life.get_data())
+	texture_empty_shield=ImageTexture.new()
+	texture_empty_shield.create_from_image(img_empty_shield.get_data())
 	
 	set_custom_minimum_size( Vector2(texture.get_width(),texture.get_height()) )
 	update()
@@ -30,12 +33,15 @@ func _draw():
 	elif(halign==2):
 		x_offset=texture.get_width()
 	
-	var ratio=1
-	if(value!=null):
-		ratio=float(value)/100
-	var r_dst=Rect2(1-x_offset,0,(texture.get_width()-1)*ratio,texture.get_height()-1)
-	var r_src=Rect2(1,0,(texture.get_width()-1)*ratio,texture.get_height()-1)
-	draw_texture_rect_region(texture, r_dst,r_src,color_shield)
+	if value==0:
+		draw_texture(texture_empty_shield,Vector2(1-x_offset,0))
+	else:
+		var ratio=1
+		if(value!=null):
+			ratio=float(value)/100
+		var r_dst=Rect2(1-x_offset,0,(texture.get_width()-1)*ratio,texture.get_height()-1)
+		var r_src=Rect2(1,0,(texture.get_width()-1)*ratio,texture.get_height()-1)
+		draw_texture_rect_region(texture, r_dst,r_src,color_shield)
 	
 	var row=0
 	var col=0

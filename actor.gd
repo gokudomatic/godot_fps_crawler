@@ -14,11 +14,10 @@ var attack_timeout=0
 var fly_mode=false
 var alive=true
 
-var player_data
+onready var player_data=get_node("/root/global").player_data
 
 var aim_offset=Vector3(0,1.5,0)
 
-const WALK_MAX_SPEED = 15
 const ACCEL= 2
 const DEACCEL= 4 
 const FLY_SPEED=100
@@ -54,7 +53,6 @@ func _fixed_process(delta):
 		_walk(delta)
 
 func _ready():
-	player_data=get_node("/root/global").player_data
 	
 	get_node("yaw/camera/actionRay").add_exception(self)
 	
@@ -181,7 +179,7 @@ func _walk(delta):
 		velocity.y+=delta*GRAVITY
 	
 	# calculate the target where the player want to move
-	var target=direction*WALK_MAX_SPEED
+	var target=direction*player_data.walk_speed
 	# if the character is moving, he must accelerate. Otherwise he deccelerates.
 	var accel=DEACCEL
 	if is_moving:
@@ -274,3 +272,6 @@ func shoot():
 
 func hit(source):
 	player_data.hit(30)
+
+func get_item(item):
+	player_data.get_item(item)
