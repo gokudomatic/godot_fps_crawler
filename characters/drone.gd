@@ -1,7 +1,9 @@
 
 extends RigidBody
 
-var bullet_class=preload("res://projectiles/energy_blast.scn")
+var bullet_class=preload("res://projectiles/Basic.tscn")
+onready var bullet_factory=get_node("/root/Projectile_Factory") 
+
 
 const ANGULAR_SPEED=4
 const VELOCITY_MAX=10
@@ -93,15 +95,14 @@ func _integrate_forces(state):
 	
 	do_current_action(state)
 
-
-
 func shoot():
 	if current_target!=null:
-		var bullet=bullet_class.instance()
+		var bullet=bullet_factory.get_basic_projectile()
 		var shoot_point=shoot_points[randi()%4]
 		var transform=get_node(shoot_point).get_global_transform()
 		bullet.set_transform(transform.looking_at(current_target.get_global_transform().origin+current_target.aim_offset,Vector3(0,1,0)).orthonormalized())
 		bullet.owner=self
+		bullet.speed=40
 		get_parent_spatial().add_child(bullet)
 
 

@@ -1,7 +1,6 @@
 
 extends KinematicBody
 
-var bullet_class=preload("res://projectiles/energy_blast.scn")
 
 var velocity=Vector3()
 var view_sensitivity = 0.3
@@ -14,6 +13,7 @@ var attack_timeout=0
 var fly_mode=false
 var alive=true
 
+onready var bullet_factory=get_node("/root/Projectile_Factory") 
 onready var player_data=get_node("/root/global").player_data
 
 var aim_offset=Vector3(0,1.5,0)
@@ -25,7 +25,6 @@ const FLY_ACCEL=4
 const GRAVITY=-9.8*3
 const MAX_JUMP_TIMEOUT=0.2
 const MAX_ATTACK_TIMEOUT=0.2
-const JUMP_SPEED = 3*3
 const MAX_SLOPE_ANGLE = 40
 const STAIR_RAYCAST_HEIGHT=0.75
 const STAIR_RAYCAST_DISTANCE=0.58
@@ -217,7 +216,7 @@ func _walk(delta):
 	
 		# jump
 		if Input.is_action_pressed("jump"):
-			velocity.y=JUMP_SPEED
+			velocity.y=player_data.jump_strength
 			jump_timeout=MAX_JUMP_TIMEOUT
 			on_floor=false
 	
@@ -263,10 +262,11 @@ func _on_ladders_body_exit( body ):
 		fly_mode=false
 
 func shoot():
-	var bullet=bullet_class.instance()
+	var bullet=bullet_factory.get_basic_projectile()
 	var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
 	bullet.set_transform(transform.orthonormalized())
 	bullet.owner=self
+	bullet.speed=40
 	get_parent_spatial().add_child(bullet)
 	attack_timeout=MAX_ATTACK_TIMEOUT
 
