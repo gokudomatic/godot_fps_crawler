@@ -42,7 +42,7 @@ func _init():
 #		connectors=["connector-E1","connector-E2","connector-E3"],
 #		spawn_points=["spawn-1"]
 #	})
-#
+
 	catalogue.append({
 		id="room-2-1",
 		file="room-2-1.scn",
@@ -75,7 +75,7 @@ func _init():
 #		connectors=["connector-E1","connector-W1"],
 #		spawn_points=["spawn-1"]
 #	})
-#
+
 	catalogue.append({
 		id="room-1-1",
 		file="room-1-1.scn",
@@ -84,7 +84,7 @@ func _init():
 		connectors=["connector-E1"],
 		spawn_points=["spawn-1"]
 	})
-
+#
 #	catalogue.append({
 #		id="room-1-3",
 #		file="room-1-3.scn",
@@ -93,7 +93,7 @@ func _init():
 #		connectors=["connector-1"],
 #		spawn_points=["spawn-1"]
 #	})
-#
+
 
 	catalogue.append({
 		id="corridor-1",

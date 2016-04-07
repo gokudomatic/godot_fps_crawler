@@ -13,6 +13,10 @@ var attack_timeout=0
 var fly_mode=false
 var alive=true
 
+var bullet_regen=0
+
+var bullet_pool=[]
+
 onready var bullet_factory=get_node("/root/Projectile_Factory") 
 onready var player_data=get_node("/root/global").player_data
 
@@ -46,6 +50,17 @@ func _input(ie):
 	
 
 func _fixed_process(delta):
+	
+	if player_data.refresh_bullet_pool:
+		player_data.refresh_bullet_pool=false
+		clear_bullet_pool()
+		generate_bullet_pool()
+	elif bullet_regen>0:
+		bullet_regen-=delta
+	else:
+		generate_bullet_pool()
+		bullet_regen=1
+	
 	if fly_mode:
 		_fly(delta)
 	else:
@@ -262,16 +277,29 @@ func _on_ladders_body_exit( body ):
 		fly_mode=false
 
 func shoot():
-	var bullet=bullet_factory.get_basic_projectile()
-	var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
-	bullet.set_transform(transform.orthonormalized())
-	bullet.owner=self
-	bullet.speed=40
-	get_parent_spatial().add_child(bullet)
-	attack_timeout=MAX_ATTACK_TIMEOUT
+	if bullet_pool.size()>0:
+		var bullet=bullet_pool[0]
+		bullet_pool.pop_front()
+		var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
+		bullet.set_transform(transform.orthonormalized())
+		get_parent_spatial().add_child(bullet)
+		attack_timeout=MAX_ATTACK_TIMEOUT
 
 func hit(source):
 	player_data.hit(30)
 
 func get_item(item):
 	player_data.get_item(item)
+	
+func clear_bullet_pool():
+	for b in bullet_pool:
+		b.queue_free()
+	bullet_pool.clear()
+
+func generate_bullet_pool():
+	if bullet_pool.size()<30:
+		var bullets=bullet_factory.get_basic_projectiles(player_data.bullet_shape,5)
+		for b in bullets:
+			b.owner=self
+			b.speed=40
+			bullet_pool.append(b)

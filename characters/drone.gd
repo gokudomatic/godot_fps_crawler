@@ -97,7 +97,8 @@ func _integrate_forces(state):
 
 func shoot():
 	if current_target!=null:
-		var bullet=bullet_factory.get_basic_projectile()
+		var bullets=bullet_factory.get_basic_projectiles(0,1)
+		var bullet=bullets[0]
 		var shoot_point=shoot_points[randi()%4]
 		var transform=get_node(shoot_point).get_global_transform()
 		bullet.set_transform(transform.looking_at(current_target.get_global_transform().origin+current_target.aim_offset,Vector3(0,1,0)).orthonormalized())

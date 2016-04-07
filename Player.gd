@@ -12,10 +12,16 @@ var jump_strength=9
 var hit_invincibility_timeout=0
 var hit_invincibility_max_timeout=1
 
+var bullet_type=0
+var bullet_shape=0 setget set_bullet_shape
+
+var refresh_bullet_pool=false
+
 var attack_regen_speed=1
 var attack_frequency=0.1
 var attack_capacity=1
 var attack_damage_factor=1
+
 
 var shield_hud
 
@@ -71,3 +77,7 @@ func set_speed(value):
 
 func get_item(item_node):
 	item_node.execute()
+
+func set_bullet_shape(value):
+	bullet_shape=value
+	refresh_bullet_pool=true

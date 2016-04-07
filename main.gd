@@ -88,7 +88,10 @@ func load_room_npc(room):
 		var navmesh=room.get_navmesh()
 		var npc
 		if navmesh!=null:
-			npc=walker_class.instance()
+			if randi()%2==0:
+				npc=walker_class.instance()
+			else:
+				npc=drone_class.instance()
 			npc.navmesh=navmesh
 		else:
 			npc=drone_class.instance()
