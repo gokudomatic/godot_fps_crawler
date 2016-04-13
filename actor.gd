@@ -245,7 +245,7 @@ func _get_floor_velocity(ray,delta):
 	var floor_velocity=Vector3()
 	# only static or rigid bodies are considered as floor. If the character is on top of another character, he can be ignored.
 	var object = ray.get_collider()
-	if object extends RigidBody or object extends StaticBody:
+	if object.is_inside_tree() and object extends RigidBody or object extends StaticBody:
 		var point = ray.get_collision_point() - object.get_translation()
 		var floor_angular_vel = Vector3()
 		# get the floor velocity and rotation depending on the kind of floor
@@ -298,8 +298,14 @@ func clear_bullet_pool():
 
 func generate_bullet_pool():
 	if bullet_pool.size()<30:
-		var bullets=bullet_factory.get_basic_projectiles(player_data.bullet_shape,5)
+		#var bullets=bullet_factory.get_basic_projectiles(player_data.bullet_shape,5)
+		var bullets=bullet_factory.get_bomb(player_data.bullet_shape,5)
 		for b in bullets:
 			b.owner=self
-			b.speed=40
 			bullet_pool.append(b)
+	
+func explosion_blown(explosion,strength):
+	var t0=explosion.get_global_transform()
+	var t1=get_global_transform()
+	var blown_direction=t1.origin-t0.origin
+	velocity+=blown_direction.normalized()*strength

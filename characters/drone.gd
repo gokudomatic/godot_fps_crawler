@@ -85,7 +85,6 @@ func _integrate_forces(state):
 		target_ray.set_rotation(Vector3(0,0,0))
 		var v=target_transform.basis.z-yaw_t.basis.z
 		if v.length()<0.53:
-			print("player in sight")
 			current_target=player
 	
 	if action_timeout<=0 and remaining_shots<=0:
@@ -115,7 +114,7 @@ func hit(source):
 		if not no_move:
 			set_linear_velocity(get_linear_velocity()+source.velocity.normalized()*10)
 		if alive:
-			life=life-20
+			life=life-source.power
 			if life<=0:
 				# die
 				die()
@@ -123,7 +122,9 @@ func hit(source):
 				# hurt
 				#change quota
 				create_sleep_action()
-	
+	change_target(source)
+
+func change_target(source):
 	var culprit=source.owner
 	if culprit!=current_target:
 		if culprit in hit_quotas:
@@ -292,3 +293,22 @@ func dodge(source):
 		factor=-1
 	set_linear_velocity(get_linear_velocity()+source.velocity.rotated(Vector3(0,1,0),factor*PI/2).normalized()*30)
 	create_attack_target_action()
+
+func explosion_blown(explosion,strength):
+	var t0=explosion.get_global_transform()
+	var t1=get_global_transform()
+	var blown_direction=t1.origin-t0.origin
+	var velocity=blown_direction.normalized()*(strength)
+	apply_impulse(t1.origin,velocity)
+	
+	if alive:
+		life=life-explosion.power
+		if life<=0:
+			# die
+			die()
+		else:
+			# hurt
+			#change quota
+			create_sleep_action()
+	
+	change_target(explosion)

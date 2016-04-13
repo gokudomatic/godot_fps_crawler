@@ -3,9 +3,10 @@
 [ext_resource path="res://projectiles/energy_blast.gd" type="Script" id=1]
 [ext_resource path="res://projectiles/radial.png" type="Texture" id=2]
 
-[sub_resource type="SphereShape" id=1]
+[sub_resource type="CapsuleShape" id=1]
 
-radius = 0.175516
+radius = 0.18
+height = 1.0
 
 [node name="bullet" type="Area"]
 
@@ -14,7 +15,7 @@ input/ray_pickable = true
 input/capture_on_drag = false
 shape_count = 1
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+shapes/0/transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.51673 )
 shapes/0/trigger = false
 space_override = 0
 gravity_point = false
@@ -32,6 +33,7 @@ __meta__ = { "__editor_plugin_screen__":"3D" }
 [node name="CollisionShape" type="CollisionShape" parent="."]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.51673 )
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0

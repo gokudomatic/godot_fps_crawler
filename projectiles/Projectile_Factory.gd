@@ -4,6 +4,9 @@ extends Node
 const basic_projectile=preload("res://projectiles/Basic.tscn")
 const basic_laser=preload("res://projectiles/energy_blast.scn")
 const basic_ball=preload("res://projectiles/energy_ball.tscn")
+const basic_bomb=preload("res://projectiles/bomb.tscn")
+const grenade=preload("res://projectiles/grenade.scn")
+const explosion1=preload("res://explosions/Explosion1.tscn")
 
 func _ready():
 	pass
@@ -22,3 +25,21 @@ func get_basic_projectiles(type,amount=1):
 		result.append(p)
 	
 	return result
+
+func get_bomb(type,amount=1):
+	var result=[]
+	var meshes=[]
+	
+	var clazz=grenade
+	var explosion_clazz=explosion1
+#	if type==1:
+#		clazz=basic_ball
+
+	for i in range(amount):
+		var p=basic_bomb.instance()
+		p.add_mesh(clazz.instance())
+		p.add_explosion(explosion_clazz.instance())
+		result.append(p)
+	
+	return result
+	

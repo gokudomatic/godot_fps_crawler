@@ -2,6 +2,7 @@
 extends Node
 
 var owner=null
+var _mesh=null
 
 func _ready():
 	if _get_child()!=null:
@@ -9,9 +10,10 @@ func _ready():
 		set_ready()
 
 func _get_child():
-	return null
+	return _mesh
 
 func add_mesh(mesh):
+	_mesh=mesh
 	add_child(mesh)
 	mesh.parent=self
 	set_ready()

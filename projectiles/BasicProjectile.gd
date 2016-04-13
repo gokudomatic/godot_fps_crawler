@@ -2,7 +2,7 @@
 extends "Abstract_Projectile.gd"
 
 var velocity=Vector3() setget _set_velocity
-var speed=0
+var speed=40
 var power=20
 
 func set_ready():
@@ -18,8 +18,6 @@ func _process(delta):
 	var motion=velocity*delta
 	set_translation(get_translation()+motion)
 
-func _get_child():
-	return get_node("bullet")
 	
 func _set_velocity(value):
 	velocity=value

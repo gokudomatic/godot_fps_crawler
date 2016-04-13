@@ -349,3 +349,10 @@ func attack():
 
 func end_attack():
 	action_timeout=0
+
+func explosion_blown(explosion,strength):
+	var t0=explosion.get_global_transform()
+	var t1=get_global_transform()
+	var blown_direction=t1.origin-t0.origin
+	var velocity=blown_direction.normalized()*(strength)
+	apply_impulse(t1.origin,velocity)
