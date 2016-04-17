@@ -2,6 +2,8 @@
 extends "Abstract_Projectile.gd"
 
 var explosion=null
+var resist_explosion=true
+var sticky=false
 
 func set_ready():
 	var aim = get_global_transform().basis
@@ -17,7 +19,8 @@ func explode():
 		var t=Transform()
 		t.origin=_mesh.get_transform().origin
 		explosion.set_transform(t)
-		add_child(explosion)
+		_mesh.get_parent().add_child(explosion)
+
 	_mesh.queue_free()
 
 func add_explosion(e):

@@ -47,8 +47,7 @@ var current_action={
 
 func _ready():
 	# Initialization here
-	player=get_parent().get_node("player")
-	#current_target=get_parent().get_node("player")
+	player=get_tree().get_nodes_in_group("player")[0]
 	target_ray=get_node("target_ray")
 	target_ray.add_exception_rid(get_rid())
 	collision_ray=get_node("collision_ray")
@@ -312,3 +311,6 @@ func explosion_blown(explosion,strength):
 			create_sleep_action()
 	
 	change_target(explosion)
+
+func trigger_explosion():
+	return true

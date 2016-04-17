@@ -84,7 +84,7 @@ func _init():
 		connectors=["connector-E1"],
 		spawn_points=["spawn-1"]
 	})
-#
+
 #	catalogue.append({
 #		id="room-1-3",
 #		file="room-1-3.scn",

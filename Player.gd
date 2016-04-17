@@ -12,7 +12,7 @@ var jump_strength=9
 var hit_invincibility_timeout=0
 var hit_invincibility_max_timeout=1
 
-var bullet_type=0
+var bullet_type=0 setget set_bullet_type
 var bullet_shape=0 setget set_bullet_shape
 
 var refresh_bullet_pool=false
@@ -80,4 +80,8 @@ func get_item(item_node):
 
 func set_bullet_shape(value):
 	bullet_shape=value
+	refresh_bullet_pool=true
+
+func set_bullet_type(value):
+	bullet_type=value
 	refresh_bullet_pool=true

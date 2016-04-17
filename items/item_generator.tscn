@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "\nextends Spatial\n\nexport(String, FILE) var clazz=null\n\nvar timer=1\nvar must_regen=false\n\nfunc _ready():\n\tset_process(true)\n\t\nfunc _process(delta):\n\tif timer>0:\n\t\ttimer-=delta\n\telse:\n\t\tif get_child_count()==0:\n\t\t\tif must_regen:\n\t\t\t\ttimer=1\n\t\t\t\tmust_regen=false\n\t\t\t\tregen_item()\n\t\t\telse:\n\t\t\t\ttimer=10\n\t\t\t\tmust_regen=true\n\t\telse:\n\t\t\ttimer=1\n\t\n\nfunc regen_item():\n\tif clazz!=null:\n\t\tvar c=load(clazz)\n\t\tadd_child(c.instance())\n"
+
+[node name="regenerator" type="Spatial"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+script/script = SubResource( 1 )
+clazz = null
+
+

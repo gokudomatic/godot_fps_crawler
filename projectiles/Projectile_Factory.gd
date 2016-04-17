@@ -11,6 +11,12 @@ const explosion1=preload("res://explosions/Explosion1.tscn")
 func _ready():
 	pass
 
+func get_projectiles(type,shape,amount=1):
+	if type==1:
+		return get_bomb(shape,amount)
+	else:
+		return get_basic_projectiles(shape,amount)
+
 func get_basic_projectiles(type,amount=1):
 	var result=[]
 	var meshes=[]

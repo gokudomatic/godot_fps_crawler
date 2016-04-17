@@ -64,7 +64,7 @@ func _ready():
 	
 	
 	# Initialization here
-	player=get_parent().get_node("player")
+	player=get_tree().get_nodes_in_group("player")[0]
 	target_ray=get_node("target_ray")
 	target_ray.add_exception_rid(get_rid())
 	
@@ -356,3 +356,6 @@ func explosion_blown(explosion,strength):
 	var blown_direction=t1.origin-t0.origin
 	var velocity=blown_direction.normalized()*(strength)
 	apply_impulse(t1.origin,velocity)
+
+func trigger_explosion():
+	return true
