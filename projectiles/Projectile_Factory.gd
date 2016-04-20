@@ -27,6 +27,7 @@ func get_basic_projectiles(type,amount=1):
 
 	for i in range(amount):
 		var p=basic_projectile.instance()
+		
 		p.add_mesh(clazz.instance())
 		result.append(p)
 	

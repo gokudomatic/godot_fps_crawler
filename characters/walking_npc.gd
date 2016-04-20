@@ -1,4 +1,4 @@
-extends RigidBody
+extends "abstract_character.gd"
 
 const ANGULAR_SPEED=4
 const VELOCITY_MAX=10

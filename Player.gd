@@ -12,6 +12,13 @@ var jump_strength=9
 var hit_invincibility_timeout=0
 var hit_invincibility_max_timeout=1
 
+var modifiers= {
+	"bomb.sticky":false,
+	"bomb.resist_explosion":true,
+	"attack.size":1,
+	"attack.split_factor":0
+}
+
 var bullet_type=0 setget set_bullet_type
 var bullet_shape=0 setget set_bullet_shape
 
@@ -85,3 +92,9 @@ func set_bullet_shape(value):
 func set_bullet_type(value):
 	bullet_type=value
 	refresh_bullet_pool=true
+
+func get_modifier(key):
+	return modifiers[key]
+
+func set_modifier(key,value):
+	modifiers[key]=value

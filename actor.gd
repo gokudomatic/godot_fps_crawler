@@ -297,14 +297,23 @@ func clear_bullet_pool():
 	bullet_pool.clear()
 
 func generate_bullet_pool():
-	if bullet_pool.size()<30:
+	if bullet_pool.size()<60:
 		var bullets=bullet_factory.get_projectiles(player_data.bullet_type,player_data.bullet_shape,5)
 		for b in bullets:
 			b.owner=self
 			bullet_pool.append(b)
+			var split_factor=player_data.get_modifier("attack.split_factor")
+			if split_factor>0:
+				var sub_bullets=bullet_factory.get_projectiles(player_data.bullet_type,player_data.bullet_shape,split_factor)
+				for sb in sub_bullets:
+					sb.owner=self
+				b.copies=sub_bullets
 	
 func explosion_blown(explosion,strength):
 	var t0=explosion.get_global_transform()
 	var t1=get_global_transform()
 	var blown_direction=t1.origin-t0.origin
 	velocity+=blown_direction.normalized()*strength
+
+func get_data():
+	return player_data

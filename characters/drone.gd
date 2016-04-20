@@ -1,9 +1,8 @@
 
-extends RigidBody
+extends "abstract_character.gd"
 
 var bullet_class=preload("res://projectiles/Basic.tscn")
 onready var bullet_factory=get_node("/root/Projectile_Factory") 
-
 
 const ANGULAR_SPEED=4
 const VELOCITY_MAX=10

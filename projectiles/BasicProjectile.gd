@@ -28,3 +28,8 @@ func _on_body_enter(body):
 		if body.has_method("hit"): 
 			body.hit(self)
 		queue_free()
+
+func set_owner(value):
+	.set_owner(value)
+	var size=get_modifier("attack.size")
+	_mesh.rescale(size)

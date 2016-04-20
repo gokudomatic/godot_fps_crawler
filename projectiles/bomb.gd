@@ -2,8 +2,6 @@
 extends "Abstract_Projectile.gd"
 
 var explosion=null
-var resist_explosion=true
-var sticky=false
 
 func set_ready():
 	var aim = get_global_transform().basis
@@ -12,16 +10,32 @@ func set_ready():
 	direction = direction.normalized()
 	
 	_mesh.set_linear_velocity(direction*20)
+	
+
+func set_owner(value):
+	.set_owner(value)
+	var size=get_modifier("attack.size")
+	_mesh.rescale(size)
 
 func explode():
 	if explosion != null:
 		explosion.owner=owner
 		var t=Transform()
 		t.origin=_mesh.get_transform().origin
+		var s=get_modifier("attack.size")
 		explosion.set_transform(t)
-		_mesh.get_parent().add_child(explosion)
+		explosion.rescale(s)
+		_mesh.get_parent_spatial().add_child(explosion)
 
 	_mesh.queue_free()
+	set_fixed_process(false)
 
 func add_explosion(e):
 	explosion=e
+
+func get_projectile_transform():
+	return _mesh.get_transform()
+
+func set_projectile_transform(src,t):
+	set_transform(src.get_transform())
+	_mesh.set_transform(t)

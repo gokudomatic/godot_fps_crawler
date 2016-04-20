@@ -7,7 +7,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends Spatial\n\nfunc _ready():\n\tget_node(\"AnimationPlayer\").play(\"explode\")\n\nvar owner=null\nvar power=60\n\nfunc die():\n\tqueue_free()\n\nfunc _on_Area_body_enter( body ):\n\tif body.has_method(\"explosion_blown\"):\n\t\tbody.explosion_blown(self,40)\n\n"
+script/source = "\nextends Spatial\n\nfunc _ready():\n\tget_node(\"AnimationPlayer\").play(\"explode\")\n\nvar owner=null\nvar power=60\n\nfunc die():\n\tqueue_free()\n\nfunc _on_Area_body_enter( body ):\n\tif body.has_method(\"explosion_blown\"):\n\t\tbody.explosion_blown(self,40)\n\nfunc rescale(size):\n\tset_scale(Vector3(size,size,size))\n\trescale_particle(\"fire\",size,0.4,1.6,128)\n\trescale_particle(\"flash\",size,0.1,1,16)\n\trescale_particle(\"sparks\",size,0.01,0.03,256)\n\nfunc rescale_particle(name,size,min_factor,max_factor,amount):\n\tget_node(name).set_variable(Particles.VAR_INITIAL_SIZE,min_factor*size)\n\tget_node(name).set_variable(Particles.VAR_FINAL_SIZE,max_factor*size)\n\tget_node(name).set_amount(amount*(1+size/10))"
 
 [sub_resource type="Animation" id=2]
 
@@ -31,7 +31,7 @@ tracks/3/path = NodePath("flash:emitting")
 tracks/3/interp = 1
 tracks/3/keys = { "cont":false, "times":FloatArray( 0, 0.5 ), "transitions":FloatArray( 1, 1 ), "values":[ true, false ] }
 tracks/4/type = "value"
-tracks/4/path = NodePath("Particles:emitting")
+tracks/4/path = NodePath("sparks:emitting")
 tracks/4/interp = 1
 tracks/4/keys = { "cont":false, "times":FloatArray( 0, 0.2 ), "transitions":FloatArray( 1, 1 ), "values":[ true, false ] }
 tracks/5/type = "method"
@@ -341,7 +341,7 @@ phase_2/color = Color( 0, 0, 0, 1 )
 phase_3/pos = 1.0
 phase_3/color = Color( 0, 0, 0, 1 )
 
-[node name="Particles" type="Particles" parent="."]
+[node name="sparks" type="Particles" parent="."]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 layers = 1
@@ -426,6 +426,8 @@ angular_damp = 1.0
 priority = 0.0
 monitoring = true
 monitorable = true
+collision/layers = 1
+collision/mask = 1
 
 [node name="CollisionShape" type="CollisionShape" parent="Area"]
 
