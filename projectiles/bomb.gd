@@ -10,7 +10,6 @@ func set_ready():
 	direction = direction.normalized()
 	
 	_mesh.set_linear_velocity(direction*20)
-	
 
 func set_owner(value):
 	.set_owner(value)
@@ -34,8 +33,8 @@ func add_explosion(e):
 	explosion=e
 
 func get_projectile_transform():
-	return _mesh.get_transform()
+	return _mesh.get_global_transform()
 
 func set_projectile_transform(src,t):
-	set_transform(src.get_transform())
-	_mesh.set_transform(t)
+	set_global_transform(t)
+

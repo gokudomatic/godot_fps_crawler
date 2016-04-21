@@ -2,7 +2,8 @@
 extends RigidBody
 
 var modifiers= {
-	"attack.size":1
+	"attack.size":1,
+	"attack.split_delay":0
 }
 
 func get_data():

@@ -23,6 +23,7 @@ func add_mesh(mesh):
 
 func set_owner(value):
 	owner=value
+	delayed_timer=get_modifier("attack.split_delay")
 
 func set_ready():
 	pass

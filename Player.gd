@@ -16,7 +16,8 @@ var modifiers= {
 	"bomb.sticky":false,
 	"bomb.resist_explosion":true,
 	"attack.size":1,
-	"attack.split_factor":0
+	"attack.split_factor":0,
+	"attack.split_delay":0.1
 }
 
 var bullet_type=0 setget set_bullet_type

@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://items/basis2.tscn" type="PackedScene" id=1]
-[ext_resource path="res://textures/items/grenade.png" type="Texture" id=2]
+[ext_resource path="res://textures/items/balls.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tglobal.player_data.bullet_type = 1\n\tglobal.player_data.bullet_shape = 0\n\tglobal.player_data.set_modifier(\"attack.split_delay\",0.5)\n"
+script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar value=global.player_data.get_modifier(\"attack.split_factor\")\n\tif value<6:\n\t\tglobal.player_data.set_modifier(\"attack.split_factor\",value+2)\n\t\tglobal.player_data.refresh_bullet_pool=true"
 
 [node name="Spatial" type="Spatial"]
 
