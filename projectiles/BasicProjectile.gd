@@ -18,7 +18,6 @@ func _process(delta):
 	var motion=velocity*delta
 	set_translation(get_translation()+motion)
 
-	
 func _set_velocity(value):
 	velocity=value
 	_get_child().velocity=value

@@ -15,7 +15,7 @@ var alive=true
 
 var bullet_regen=0
 
-var bullet_pool=[]
+var weapon_base=null
 
 onready var bullet_factory=get_node("/root/Projectile_Factory") 
 onready var player_data=get_node("/root/global").player_data
@@ -53,12 +53,12 @@ func _fixed_process(delta):
 	
 	if player_data.refresh_bullet_pool:
 		player_data.refresh_bullet_pool=false
-		clear_bullet_pool()
-		generate_bullet_pool()
+		weapon_base.reset()
+		weapon_base.regenerate()
 	elif bullet_regen>0:
 		bullet_regen-=delta
 	else:
-		generate_bullet_pool()
+		weapon_base.regenerate()
 		bullet_regen=1
 	
 	if fly_mode:
@@ -67,6 +67,10 @@ func _fixed_process(delta):
 		_walk(delta)
 
 func _ready():
+	
+	weapon_base=bullet_factory.get_base(0)
+	get_node("yaw/camera/weapon/shoot-point").add_child(weapon_base)
+	weapon_base.owner=self
 	
 	get_node("yaw/camera/actionRay").add_exception(self)
 	
@@ -277,12 +281,7 @@ func _on_ladders_body_exit( body ):
 		fly_mode=false
 
 func shoot():
-	if bullet_pool.size()>0:
-		var bullet=bullet_pool[0]
-		bullet_pool.pop_front()
-		var transform=get_node("yaw/camera/weapon/shoot-point").get_global_transform()
-		bullet.set_transform(transform.orthonormalized())
-		get_parent_spatial().add_child(bullet)
+	if weapon_base.shoot():
 		attack_timeout=MAX_ATTACK_TIMEOUT
 
 func hit(source):
@@ -290,25 +289,7 @@ func hit(source):
 
 func get_item(item):
 	player_data.get_item(item)
-	
-func clear_bullet_pool():
-	for b in bullet_pool:
-		b.queue_free()
-	bullet_pool.clear()
 
-func generate_bullet_pool():
-	if bullet_pool.size()<60:
-		var bullets=bullet_factory.get_projectiles(player_data.bullet_type,player_data.bullet_shape,5)
-		for b in bullets:
-			b.owner=self
-			bullet_pool.append(b)
-			var split_factor=player_data.get_modifier("attack.split_factor")
-			if split_factor>0:
-				var sub_bullets=bullet_factory.get_projectiles(player_data.bullet_type,player_data.bullet_shape,split_factor)
-				for sb in sub_bullets:
-					sb.owner=self
-				b.copies=sub_bullets
-	
 func explosion_blown(explosion,strength):
 	var t0=explosion.get_global_transform()
 	var t1=get_global_transform()

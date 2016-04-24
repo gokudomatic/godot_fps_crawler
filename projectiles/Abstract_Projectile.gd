@@ -7,6 +7,9 @@ var _mesh=null
 var delayed_timer=0.5
 var copies=null setget set_copies
 
+func die():
+	queue_free()
+
 func _ready():
 	if _get_child()!=null:
 		_get_child().parent=self

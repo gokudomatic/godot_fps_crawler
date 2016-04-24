@@ -19,6 +19,7 @@ func set_owner(value):
 func explode():
 	if explosion != null:
 		explosion.owner=owner
+		explosion.source=self
 		var t=Transform()
 		t.origin=_mesh.get_transform().origin
 		var s=get_modifier("attack.size")

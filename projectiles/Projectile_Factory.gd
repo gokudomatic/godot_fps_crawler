@@ -8,8 +8,15 @@ const basic_bomb=preload("res://projectiles/bomb.tscn")
 const grenade=preload("res://projectiles/grenade.scn")
 const explosion1=preload("res://explosions/Explosion1.tscn")
 
+const base_projectile=preload("res://weapon_base/projectile_base.tscn")
+const base_instant=preload("res://weapon_base/instant_base.tscn")
+
 func _ready():
 	pass
+
+func get_base(type):
+	#return base_projectile.instance()
+	return base_instant.instance()
 
 func get_projectiles(type,shape,amount=1):
 	if type==1:
