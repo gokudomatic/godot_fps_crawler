@@ -53,6 +53,14 @@ func _fixed_process(delta):
 	
 	if player_data.refresh_bullet_pool:
 		player_data.refresh_bullet_pool=false
+		
+		if player_data.refresh_weapon_base:
+			player_data.refresh_weapon_base=false
+			weapon_base.queue_free()
+			weapon_base=bullet_factory.get_base(player_data.weapon_base_type)
+			get_node("yaw/camera/weapon/shoot-point").add_child(weapon_base)
+			weapon_base.owner=self
+		
 		weapon_base.reset()
 		weapon_base.regenerate()
 	elif bullet_regen>0:
@@ -68,7 +76,7 @@ func _fixed_process(delta):
 
 func _ready():
 	
-	weapon_base=bullet_factory.get_base(0)
+	weapon_base=bullet_factory.get_base(player_data.weapon_base_type)
 	get_node("yaw/camera/weapon/shoot-point").add_child(weapon_base)
 	weapon_base.owner=self
 	
@@ -284,7 +292,7 @@ func shoot():
 	if weapon_base.shoot():
 		attack_timeout=MAX_ATTACK_TIMEOUT
 
-func hit(source):
+func hit(source,special=false):
 	player_data.hit(30)
 
 func get_item(item):

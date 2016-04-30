@@ -19,24 +19,22 @@ var going_backward=false
 var aiming_at_target=false
 var target_ray=null
 var collision_ray=null
-var current_target=null
 var player=null
 var action_timeout=0
 var can_see_target=false
 var remaining_shots=0
 var current_direction=Vector3()
 var distance_to_collision=0
-var alive=true
 var remaining_dodges=MAXIMUM_DODGES
 var no_move=false
-var hit_quotas=Dictionary()
+
+onready var elemental=get_node("elemental")
 
 const random_angle_a=float(355284801)/float(256000000)
 
 
 var aim_offset=Vector3()
 
-var life=MAX_LIFE
 var current_action={
 	name="",
 	shoot=false,
@@ -91,6 +89,8 @@ func _integrate_forces(state):
 		action_timeout-=state.get_step()
 	
 	do_current_action(state)
+	
+	_process_elemental(state.get_step())
 
 func shoot():
 	if current_target!=null:
@@ -104,7 +104,7 @@ func shoot():
 		get_parent_spatial().add_child(bullet)
 
 
-func hit(source):
+func hit(source,special=false):
 	if remaining_dodges>=1 and not no_move:
 		dodge(source)
 		remaining_dodges-=1
@@ -113,6 +113,7 @@ func hit(source):
 			set_linear_velocity(get_linear_velocity()+source.velocity.normalized()*10)
 		if alive:
 			life=life-source.power
+			
 			if life<=0:
 				# die
 				die()
@@ -120,22 +121,12 @@ func hit(source):
 				# hurt
 				#change quota
 				create_sleep_action()
+				
+			
 	change_target(source)
-
-func change_target(source):
-	var culprit=source.owner
-	if culprit!=current_target:
-		if culprit in hit_quotas:
-			hit_quotas[culprit]+=source.power
-			if hit_quotas[culprit]>MAX_LIFE/4:
-				current_target=culprit
-				hit_quotas.clear()
-		else:
-			if current_target==null:
-				print(get_name()," attaqued by ",culprit.get_name())
-				current_target=culprit
-			else:
-				hit_quotas[culprit]=source.power
+	
+	if special and alive:
+		hit_special(source,special)
 
 func do_current_action(state):
 	
@@ -283,7 +274,7 @@ func die():
 	set_mode(MODE_RIGID)
 	set_use_custom_integrator(false)
 	get_node("yaw/reactor").set_emitting(false)
-	alive=false
+	.die()#alive=false
 	
 func dodge(source):
 	var factor=1
@@ -292,24 +283,16 @@ func dodge(source):
 	set_linear_velocity(get_linear_velocity()+source.velocity.rotated(Vector3(0,1,0),factor*PI/2).normalized()*30)
 	create_attack_target_action()
 
-func explosion_blown(explosion,strength):
-	var t0=explosion.get_global_transform()
-	var t1=get_global_transform()
-	var blown_direction=t1.origin-t0.origin
-	var velocity=blown_direction.normalized()*(strength)
-	apply_impulse(t1.origin,velocity)
-	
-	if alive:
-		life=life-explosion.power
-		if life<=0:
-			# die
-			die()
-		else:
-			# hurt
-			#change quota
-			create_sleep_action()
-	
-	change_target(explosion)
+func ignite(amount):
+	.ignite(amount)
+	elemental.mode=1
+	elemental.strength=buff["damage.fire"]
 
-func trigger_explosion():
-	return true
+func melt(amount):
+	.melt(amount)
+	elemental.mode=2
+	elemental.strength=buff["damage.acide"]
+
+func stop_elemental():
+	.stop_elemental()
+	elemental.mode=0

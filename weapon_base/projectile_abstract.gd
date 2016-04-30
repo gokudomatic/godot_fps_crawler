@@ -18,3 +18,6 @@ func regenerate():
 
 func reset():
 	pass
+
+func get_modifier(key):
+	return owner.get_data().get_modifier(key)

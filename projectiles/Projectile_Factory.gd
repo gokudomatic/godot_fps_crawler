@@ -6,7 +6,12 @@ const basic_laser=preload("res://projectiles/energy_blast.scn")
 const basic_ball=preload("res://projectiles/energy_ball.tscn")
 const basic_bomb=preload("res://projectiles/bomb.tscn")
 const grenade=preload("res://projectiles/grenade.scn")
+
 const explosion1=preload("res://explosions/Explosion1.tscn")
+const explosion_fire1=preload("res://explosions/Explosion_fire1.tscn")
+const explosion_acide1=preload("res://explosions/Explosion_acide.tscn")
+
+const impact_class=preload("res://explosions/impact.tscn")
 
 const base_projectile=preload("res://weapon_base/projectile_base.tscn")
 const base_instant=preload("res://weapon_base/instant_base.tscn")
@@ -15,8 +20,10 @@ func _ready():
 	pass
 
 func get_base(type):
-	#return base_projectile.instance()
-	return base_instant.instance()
+	if type==1:
+		return base_instant.instance()
+	else:
+		return base_projectile.instance()
 
 func get_projectiles(type,shape,amount=1):
 	if type==1:
@@ -56,4 +63,16 @@ func get_bomb(type,amount=1):
 		result.append(p)
 	
 	return result
-	
+
+func get_impact():
+	return impact_class.instance()
+
+func get_impact_explosion_class(type):
+	if type=="fire":
+		return explosion_fire1
+	elif type=="acide":
+		return explosion_acide1
+	elif type=="explosion":
+		return explosion1
+	else:
+		return null

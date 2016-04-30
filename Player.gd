@@ -17,13 +17,18 @@ var modifiers= {
 	"bomb.resist_explosion":true,
 	"attack.size":1,
 	"attack.split_factor":0,
-	"attack.split_delay":0.1
+	"attack.split_delay":0.1,
+	"attack.elemental_impact":"",
+	"attack.elemental_chance":20
 }
 
 var bullet_type=0 setget set_bullet_type
 var bullet_shape=0 setget set_bullet_shape
+var weapon_base_type=0 setget set_weapon_base_type
+
 
 var refresh_bullet_pool=false
+var refresh_weapon_base=false
 
 var attack_regen_speed=1
 var attack_frequency=0.1
@@ -94,8 +99,16 @@ func set_bullet_type(value):
 	bullet_type=value
 	refresh_bullet_pool=true
 
+func set_weapon_base_type(value):
+	weapon_base_type=value
+	refresh_bullet_pool=true
+	refresh_weapon_base=true
+
 func get_modifier(key):
-	return modifiers[key]
+	if modifiers.has(key):
+		return modifiers[key]
+	else:
+		return null
 
 func set_modifier(key,value):
 	modifiers[key]=value

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=1]
 
-[ext_resource path="res://textures/diamond_implact.png" type="Texture" id=1]
+[ext_resource path="res://textures/diamond_implact_single.png" type="Texture" id=1]
 
 [sub_resource type="Animation" id=1]
 
@@ -9,21 +9,22 @@ length = 0.7
 loop = false
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:frame")
+tracks/0/path = NodePath(".:opacity")
 tracks/0/interp = 1
-tracks/0/keys = { "cont":true, "times":FloatArray( 0, 0.3, 0.7 ), "transitions":FloatArray( 1, 1, 1 ), "values":[ 3, 0, 3 ] }
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:opacity")
+tracks/0/keys = { "cont":true, "times":FloatArray( 0, 0.3, 0.7 ), "transitions":FloatArray( 1, 1, 1 ), "values":[ 0.0, 1.0, 0.0 ] }
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
-tracks/1/keys = { "cont":true, "times":FloatArray( 0, 0.3, 0.7 ), "transitions":FloatArray( 1, 1, 1 ), "values":[ 0.0, 1.0, 0.0 ] }
-tracks/2/type = "method"
-tracks/2/path = NodePath(".")
+tracks/1/keys = { "times":FloatArray( 0.7 ), "transitions":FloatArray( 1 ), "values":[ { "args":[  ], "method":"queue_free" } ] }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:transform/scale")
 tracks/2/interp = 1
-tracks/2/keys = { "times":FloatArray( 0.7 ), "transitions":FloatArray( 1 ), "values":[ { "args":[  ], "method":"queue_free" } ] }
+tracks/2/keys = { "cont":true, "times":FloatArray( 0, 0.3, 0.7 ), "transitions":FloatArray( 1, 1, 1 ), "values":[ Vector3( 0, 0, 0 ), Vector3( 1, 1, 1 ), Vector3( 0, 0, 0 ) ] }
 
 [node name="Sprite3D" type="Sprite3D"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
 layers = 1
 geometry/visible = true
 geometry/material_override = null
@@ -51,8 +52,8 @@ flags/shaded = false
 flags/alpha_cut = 0
 texture = ExtResource( 1 )
 vframes = 1
-hframes = 4
-frame = 3
+hframes = 1
+frame = 0
 region = false
 region_rect = Rect2( 0, 0, 0, 0 )
 

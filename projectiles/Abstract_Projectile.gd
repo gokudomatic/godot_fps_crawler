@@ -3,6 +3,7 @@ extends Node
 
 var owner=null setget set_owner
 var _mesh=null
+var explosion_class=null
 
 var delayed_timer=0.5
 var copies=null setget set_copies

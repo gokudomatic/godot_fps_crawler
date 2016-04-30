@@ -262,33 +262,6 @@ func create_attack_target_action():
 	action_timeout=10
 	attack()
 
-func hit(source):
-	
-	
-	
-	if alive:
-		life=life-20
-		if life<=0:
-			# die
-			die()
-		else:
-			# hurt
-			model.hit()
-			create_sleep_action()
-	
-	var culprit=source.owner
-	if culprit!=current_target:
-		if culprit in hit_quotas:
-			hit_quotas[culprit]+=source.power
-			if hit_quotas[culprit]>MAX_LIFE/4:
-				current_target=culprit
-				hit_quotas.clear()
-		else:
-			if current_target==null:
-				current_target=culprit
-			else:
-				hit_quotas[culprit]=source.power
-
 func avoid_fall():
 	var t=get_global_transform()
 	var salt=(randi()%3)-1
@@ -349,13 +322,3 @@ func attack():
 
 func end_attack():
 	action_timeout=0
-
-func explosion_blown(explosion,strength):
-	var t0=explosion.get_global_transform()
-	var t1=get_global_transform()
-	var blown_direction=t1.origin-t0.origin
-	var velocity=blown_direction.normalized()*(strength)
-	apply_impulse(t1.origin,velocity)
-
-func trigger_explosion():
-	return true

@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://items/basis2.tscn" type="PackedScene" id=1]
-[ext_resource path="res://textures/items/sticky_grenade.png" type="Texture" id=2]
+[ext_resource path="res://textures/items/explosive.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar player=global.player_data\n\tplayer.weapon_base_type = 0\n\tplayer.bullet_type = 1\n\tplayer.bullet_shape = 0\n\tplayer.set_modifier(\"bomb.sticky\",true)\n\tplayer.set_modifier(\"bomb.resist_explosion\",false)\n"
+script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.set_modifier(\"attack.elemental_impact\",\"explosion\")\n\tvar chance=data.get_modifier(\"attack.elemental_chance\")\n\tif chance>1:\n\t\tdata.set_modifier(\"attack.elemental_chance\",chance/2)\n\tdata.refresh_bullet_pool=true\n"
 
 [node name="Spatial" type="Spatial"]
 
