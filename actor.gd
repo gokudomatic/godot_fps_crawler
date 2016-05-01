@@ -298,7 +298,7 @@ func hit(source,special=false):
 func get_item(item):
 	player_data.get_item(item)
 
-func explosion_blown(explosion,strength):
+func explosion_blown(explosion,strength,special):
 	var t0=explosion.get_global_transform()
 	var t1=get_global_transform()
 	var blown_direction=t1.origin-t0.origin

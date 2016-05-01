@@ -19,7 +19,8 @@ var modifiers= {
 	"attack.split_factor":0,
 	"attack.split_delay":0.1,
 	"attack.elemental_impact":"",
-	"attack.elemental_chance":20
+	"attack.elemental_chance":20,
+	"attack.elemental_power":0.5
 }
 
 var bullet_type=0 setget set_bullet_type

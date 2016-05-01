@@ -53,8 +53,8 @@ func get_bomb(type,amount=1):
 	
 	var clazz=grenade
 	var explosion_clazz=explosion1
-#	if type==1:
-#		clazz=basic_ball
+#	if explosion_type!=null and explosion_type!="":
+#		explosion_clazz=get_impact_explosion_class(explosion_type)
 
 	for i in range(amount):
 		var p=basic_bomb.instance()

@@ -39,7 +39,7 @@ func _process(delta):
 		if parent.get_modifier("bomb.sticky") and c!=parent.owner:
 			set_sleeping(true)
 
-func explosion_blown(explosion,strength):
+func explosion_blown(explosion,strength,elemental=false):
 	if parent.get_modifier("bomb.resist_explosion"):
 		var t0=explosion.get_global_transform()
 		var t1=get_global_transform()

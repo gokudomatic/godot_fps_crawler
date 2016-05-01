@@ -61,7 +61,7 @@ script/script = SubResource( 1 )
 
 [node name="actor" parent="." instance=ExtResource( 1 )]
 
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68001, 0, 3.92233 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68001, 0, -1.31989 )
 
 [node name="OmniLight" type="OmniLight" parent="actor"]
 

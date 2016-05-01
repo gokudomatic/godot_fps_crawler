@@ -16,11 +16,16 @@ func shoot():
 
 func regenerate():
 	if bullet_pool.size()<60:
+		
+		var elemental=data.get_modifier("attack.elemental_impact")
+		var is_special=elemental!=null and elemental!=""
+		
 		var bullets=bullet_factory.get_projectiles(data.bullet_type,data.bullet_shape,5)
-		var impact_class=bullet_factory.get_impact_explosion_class(data.get_modifier("attack.elemental_impact"))
+		var impact_class=bullet_factory.get_impact_explosion_class(elemental)
 		for b in bullets:
 			b.owner=owner
 			b.explosion_class=impact_class
+			b.set_elemental(is_special)
 			bullet_pool.append(b)
 			var split_factor=data.get_modifier("attack.split_factor")
 			if split_factor>0:
@@ -28,6 +33,7 @@ func regenerate():
 				for sb in sub_bullets:
 					sb.owner=owner
 					sb.explosion_class=impact_class
+					sb.set_elemental(is_special)
 				b.copies=sub_bullets
 
 func reset():

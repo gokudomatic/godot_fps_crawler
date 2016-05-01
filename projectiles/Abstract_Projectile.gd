@@ -69,3 +69,6 @@ func get_projectile_transform():
 
 func set_projectile_transform(src,t):
 	set_transform(t)
+
+func set_elemental(value):
+	pass

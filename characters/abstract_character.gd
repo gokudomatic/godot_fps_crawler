@@ -40,14 +40,15 @@ func hit(source,special=false):
 		change_target(source)
 		hit_special(source,special)
 
-func hit_special(source,special):
+func hit_special(source,special,factor=1):
 	elemental_timeout=15
 	if special:
 		var mod=source.get_modifier("attack.elemental_impact")
+		var power=source.get_modifier("attack.elemental_power")
 		if mod=="fire":
-			ignite(0.5)
+			ignite(power*factor)
 		elif mod=="acide":
-			melt(0.5)
+			melt(power*factor)
 
 func change_target(source):
 	var culprit=source.owner
@@ -63,7 +64,7 @@ func change_target(source):
 			else:
 				hit_quotas[culprit]=source.power
 
-func explosion_blown(explosion,strength):
+func explosion_blown(explosion,strength,special=false):
 	var t0=explosion.get_global_transform()
 	var t1=get_global_transform()
 	var blown_direction=t1.origin-t0.origin
@@ -81,6 +82,9 @@ func explosion_blown(explosion,strength):
 			create_sleep_action()
 	
 	change_target(explosion)
+	
+	if alive:
+		hit_special(explosion,special,3)
 
 func trigger_explosion():
 	return true
