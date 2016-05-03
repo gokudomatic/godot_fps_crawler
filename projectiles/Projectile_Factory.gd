@@ -15,6 +15,7 @@ const impact_class=preload("res://explosions/impact.tscn")
 
 const base_projectile=preload("res://weapon_base/projectile_base.tscn")
 const base_instant=preload("res://weapon_base/instant_base.tscn")
+const base_flamethrower=preload("res://weapon_base/flamethrower_base.tscn")
 
 func _ready():
 	pass
@@ -22,6 +23,8 @@ func _ready():
 func get_base(type):
 	if type==1:
 		return base_instant.instance()
+	elif type==2:
+		return base_flamethrower.instance()
 	else:
 		return base_projectile.instance()
 

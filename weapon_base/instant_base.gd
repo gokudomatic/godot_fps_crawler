@@ -1,7 +1,10 @@
 
 extends "projectile_abstract.gd"
 
+const SPLIT_STEP=PI/64
+
 onready var ray=get_node("RayCast")
+var subrays=[]
 
 onready var explosion_class=null
 
@@ -14,15 +17,23 @@ func set_owner(value):
 	ray.add_exception_rid(owner)
 
 func shoot():
-	if ray.is_colliding():
-		var object=ray.get_collider()
-		var special=false
-		if explosion_class != null and randi()%data.get_modifier("attack.elemental_chance") ==0 :
-			special=true
-		var p=ray.get_collision_point()
+	var special=false
+	if explosion_class != null and randi()%data.get_modifier("attack.elemental_chance") ==0 :
+		special=true
+	
+	_shoot_ray(ray,special)
+	for r in subrays:
+		_shoot_ray(r,special)
+	
+	return true
+
+func _shoot_ray(r,special):
+	if r.is_colliding():
+		var object=r.get_collider()
+		var p=r.get_collision_point()
 		if object.has_method("hit"):
 			object.hit(self,special)
-		var instance=bullet_factory.get_impact()    #impact_class.instance()
+		var instance=bullet_factory.get_impact()  
 		instance.set_translation(p)
 		owner.get_parent_spatial().add_child(instance)
 		if special :
@@ -33,9 +44,27 @@ func shoot():
 			explosion.set_transform(t)
 			explosion.rescale(0.2*data.get_modifier("attack.size"))
 			owner.get_parent_spatial().add_child(explosion)
-			
-	return true
 
 func reset():
-	print("modifier:",data.get_modifier("attack.elemental_impact"))
 	explosion_class=bullet_factory.get_impact_explosion_class(data.get_modifier("attack.elemental_impact"))
+	var i=subrays.size()
+
+	var is_right=true
+	var delta_angle=-i/2*SPLIT_STEP
+
+	while i<data.get_modifier("attack.split_factor"):
+		if is_right:
+			delta_angle=-delta_angle+SPLIT_STEP
+		else:
+			delta_angle=-delta_angle
+		is_right=!is_right
+		
+		var r=RayCast.new()
+		subrays.append(r)
+		i+=1
+		r.set_cast_to(Vector3(0,0,-1000))
+		r.set_enabled(true)
+		r.add_exception_rid(owner)
+		add_child(r)
+		r.rotate_y(delta_angle)
+		print("delta: ",delta_angle)
