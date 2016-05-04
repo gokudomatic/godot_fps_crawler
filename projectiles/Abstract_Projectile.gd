@@ -4,11 +4,13 @@ extends Node
 var owner=null setget set_owner
 var _mesh=null
 var explosion_class=null
+var alive=true
 
 var delayed_timer=0.5
 var copies=null setget set_copies
 
 func die():
+	alive=false
 	queue_free()
 
 func _ready():
@@ -48,8 +50,12 @@ func _fixed_process(delta):
 		split()
 
 func split():
+	
 	set_fixed_process(false)
 	var t=get_projectile_transform()
+	if t==null or not alive:
+		return
+	
 	var is_right=true
 	var up=Vector3(0,1,0)
 	var delta_angle=0
@@ -62,6 +68,10 @@ func split():
 		var t1=t.rotated(up,delta_angle)
 		
 		c.set_projectile_transform(self,t1)
+		
+		if not alive:
+			break
+		
 		get_parent_spatial().add_child(c)
 
 func get_projectile_transform():

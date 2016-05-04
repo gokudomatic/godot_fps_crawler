@@ -6,6 +6,8 @@ const basic_laser=preload("res://projectiles/energy_blast.scn")
 const basic_ball=preload("res://projectiles/energy_ball.tscn")
 const basic_bomb=preload("res://projectiles/bomb.tscn")
 const grenade=preload("res://projectiles/grenade.scn")
+const basic_rocket=preload("res://projectiles/rocket.tscn")
+const missile=preload("res://projectiles/missile.scn")
 
 const explosion1=preload("res://explosions/Explosion1.tscn")
 const explosion_fire1=preload("res://explosions/Explosion_fire1.tscn")
@@ -31,6 +33,8 @@ func get_base(type):
 func get_projectiles(type,shape,amount=1):
 	if type==1:
 		return get_bomb(shape,amount)
+	elif type==2:
+		return get_rocket(shape,amount)
 	else:
 		return get_basic_projectiles(shape,amount)
 
@@ -61,6 +65,23 @@ func get_bomb(type,amount=1):
 
 	for i in range(amount):
 		var p=basic_bomb.instance()
+		p.add_mesh(clazz.instance())
+		p.add_explosion(explosion_clazz.instance())
+		result.append(p)
+	
+	return result
+
+func get_rocket(type,amount=1):
+	var result=[]
+	var meshes=[]
+	
+	var clazz=missile
+	var explosion_clazz=explosion1
+#	if explosion_type!=null and explosion_type!="":
+#		explosion_clazz=get_impact_explosion_class(explosion_type)
+
+	for i in range(amount):
+		var p=basic_rocket.instance()
 		p.add_mesh(clazz.instance())
 		p.add_explosion(explosion_clazz.instance())
 		result.append(p)

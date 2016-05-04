@@ -41,5 +41,4 @@ func set_projectile_transform(src,t):
 
 func set_elemental(value):
 	if explosion.has_method("set_elemental"):
-		print("1")
 		explosion.set_elemental(value)
