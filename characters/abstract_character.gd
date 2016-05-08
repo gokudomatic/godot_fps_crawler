@@ -14,7 +14,8 @@ var elemental_frequency=0
 
 var modifiers= {
 	"attack.size":1,
-	"attack.split_delay":0
+	"attack.split_delay":0,
+	"projectile.homing":false
 }
 
 func get_data():

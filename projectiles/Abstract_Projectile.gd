@@ -5,6 +5,7 @@ var owner=null setget set_owner
 var _mesh=null
 var explosion_class=null
 var alive=true
+var target=null
 
 var delayed_timer=0.5
 var copies=null setget set_copies
@@ -72,6 +73,7 @@ func split():
 		if not alive:
 			break
 		
+		c.target=target
 		get_parent_spatial().add_child(c)
 
 func get_projectile_transform():
@@ -79,6 +81,16 @@ func get_projectile_transform():
 
 func set_projectile_transform(src,t):
 	set_transform(t)
+
+func reset_target():
+	if get_modifier("projectile.homing"):
+		target=owner.current_target
+
+func rotate_to_target(direction):
+	var target_z=get_global_transform().looking_at(target.get_global_transform().origin+target.aim_offset,Vector3(0,1,0)).orthonormalized().basis.z
+	var vx=Vector2(-direction.x,-direction.z).angle_to(Vector2(target_z.x,target_z.z))
+	var vy=direction.y-Vector2(1,0).angle_to(Vector2(1,target_z.y))
+	return [vx,vy]
 
 func set_elemental(value):
 	pass

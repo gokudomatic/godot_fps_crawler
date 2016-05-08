@@ -9,6 +9,7 @@ func shoot():
 		bullet_pool.pop_front()
 		var transform=get_global_transform()
 		bullet.set_transform(transform.orthonormalized())
+		bullet.reset_target()
 		owner.get_parent_spatial().add_child(bullet)
 		return true
 	else:

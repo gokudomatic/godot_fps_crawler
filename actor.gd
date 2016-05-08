@@ -12,6 +12,8 @@ var jump_timeout=0
 var attack_timeout=0
 var fly_mode=false
 var alive=true
+var current_target=null
+var current_target_2d_pos=null
 
 var bullet_regen=0
 
@@ -50,6 +52,8 @@ func _input(ie):
 	
 
 func _fixed_process(delta):
+	
+	refresh_current_target()
 	
 	if player_data.refresh_bullet_pool:
 		player_data.refresh_bullet_pool=false
@@ -290,7 +294,7 @@ func _on_ladders_body_exit( body ):
 
 func shoot():
 	if weapon_base.shoot():
-		attack_timeout=MAX_ATTACK_TIMEOUT
+		attack_timeout=1.0/player_data.fire_rate
 
 func hit(source,special=false):
 	player_data.hit(30)
@@ -306,3 +310,25 @@ func explosion_blown(explosion,strength,special):
 
 func get_data():
 	return player_data
+
+func refresh_current_target():
+	var camera=get_node("yaw/camera")
+	var screen_center=get_viewport().get_rect().size/2
+	
+	var pt=get_global_transform().origin
+	var closest_enemy=null
+	var closest_enemy_dist=-1
+	
+	var enemies=get_tree().get_nodes_in_group("enemy")
+	for enemy in enemies:
+		var et=enemy.get_global_transform().origin+enemy.aim_offset
+		var pos=camera.unproject_position(et)
+		if screen_center.distance_to(pos)<50:
+			var ed=et.distance_to(pt)
+			if closest_enemy==null or ed<closest_enemy_dist:
+				closest_enemy=enemy
+				closest_enemy_dist=ed
+				current_target_2d_pos=pos
+	
+	current_target=closest_enemy
+	

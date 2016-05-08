@@ -8,6 +8,7 @@ const basic_bomb=preload("res://projectiles/bomb.tscn")
 const grenade=preload("res://projectiles/grenade.scn")
 const basic_rocket=preload("res://projectiles/rocket.tscn")
 const missile=preload("res://projectiles/missile.scn")
+const needle=preload("res://projectiles/needle.tscn")
 
 const explosion1=preload("res://explosions/Explosion1.tscn")
 const explosion_fire1=preload("res://explosions/Explosion_fire1.tscn")
@@ -45,6 +46,7 @@ func get_basic_projectiles(type,amount=1):
 	var clazz=basic_laser
 	if type==1:
 		clazz=basic_ball
+	
 
 	for i in range(amount):
 		var p=basic_projectile.instance()
@@ -77,8 +79,9 @@ func get_rocket(type,amount=1):
 	
 	var clazz=missile
 	var explosion_clazz=explosion1
-#	if explosion_type!=null and explosion_type!="":
-#		explosion_clazz=get_impact_explosion_class(explosion_type)
+	
+	if type==1:
+		clazz=needle
 
 	for i in range(amount):
 		var p=basic_rocket.instance()

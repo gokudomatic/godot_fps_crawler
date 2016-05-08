@@ -3,6 +3,7 @@ extends Spatial
 
 var parent=null
 
+
 func _on_area_body_enter( body ):
 	parent._on_body_enter(body)
 	

@@ -105,7 +105,6 @@ func _integrate_forces(state):
 		var v=target_transform.basis.z-yaw_t.basis.z
 		if v.length()<0.53:
 			current_target=player
-			print("see player")
 	
 	if action_timeout<=0:
 		change_action(state)

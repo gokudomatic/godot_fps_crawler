@@ -8,7 +8,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends Spatial\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\tget_node(\"/root/global\").player_data.shield_hud=get_node(\"gui/shield_bar\")\n\n\n"
+script/source = "\nextends Spatial\n\nonready var player=get_node(\"player\")\nonready var cursor=get_node(\"gui/visor\")\n\nfunc _ready():\n\tget_node(\"/root/global\").player_data.shield_hud=get_node(\"gui/shield_bar\")\n\tset_process(true)\n\nfunc _process(delta):\n\t\n\tif player.current_target!=null:\n\t\tcursor.set_modulate(Color(0,0.670588,0))\n\telse:\n\t\tcursor.set_modulate(Color(0.952941,0.670588,0.227451))\n\n\n"
 
 [sub_resource type="Environment" id=2]
 
@@ -22,7 +22,7 @@ background/energy = 1.0
 background/scale = 1.0
 background/glow = 0.0
 background/canvas_max_layer = null
-glow/enabled = false
+glow/enabled = true
 glow/blur_passes = 1
 glow/blur_scale = 1
 glow/blur_strength = 1
@@ -59,11 +59,11 @@ srgb/enabled = false
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 script/script = SubResource( 1 )
 
-[node name="actor" parent="." instance=ExtResource( 1 )]
+[node name="player" parent="." instance=ExtResource( 1 )]
 
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68001, 0, -1.31989 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 26.3446, 0, -25.1564 )
 
-[node name="OmniLight" type="OmniLight" parent="actor"]
+[node name="OmniLight" type="OmniLight" parent="player"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 layers = 1

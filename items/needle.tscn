@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://items/basis2.tscn" type="PackedScene" id=1]
-[ext_resource path="res://textures/items/missile.png" type="Texture" id=2]
+[ext_resource path="res://textures/items/needle.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.weapon_base_type = 0\n\tdata.bullet_type = 2\n\tdata.bullet_shape = 0\n\tdata.fire_rate=0.8\n\tdata.set_modifier(\"attack.split_delay\",0.5)\n\tdata.set_modifier(\"attack.size\",max(1,data.get_modifier(\"attack.size\")))\n"
+script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.weapon_base_type = 0\n\tdata.bullet_type = 2\n\tdata.bullet_shape = 1\n\tdata.fire_rate=8\n\tdata.set_modifier(\"attack.split_delay\",0.5)\n\tdata.set_modifier(\"bomb.sticky\",true)\n\tdata.set_modifier(\"attack.size\",0.1)\n\tdata.set_modifier(\"bomb.resist_explosion\",false)\n\tdata.set_modifier(\"explosion.power\",3)\n\tdata.set_modifier(\"projectile.homing\",true)"
 
 [node name="Spatial" type="Spatial"]
 

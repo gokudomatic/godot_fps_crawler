@@ -11,6 +11,7 @@ var walk_speed=15 setget set_speed
 var jump_strength=9
 var hit_invincibility_timeout=0
 var hit_invincibility_max_timeout=1
+var fire_rate=3
 
 var modifiers= {
 	"bomb.sticky":false,
@@ -20,7 +21,9 @@ var modifiers= {
 	"attack.split_delay":0.1,
 	"attack.elemental_impact":"",
 	"attack.elemental_chance":20,
-	"attack.elemental_power":0.5
+	"attack.elemental_power":0.5,
+	"explosion.power":40,
+	"projectile.homing":false
 }
 
 var bullet_type=0 setget set_bullet_type

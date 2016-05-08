@@ -5,6 +5,8 @@ var velocity=Vector3() setget _set_velocity
 var speed=40
 var sleep=false
 var timeout=5
+var age=1
+
 
 var explosion=null
 
@@ -12,6 +14,11 @@ func set_ready():
 	set_process(true)
 
 func _process(delta):
+	age+=delta
+	if age>40:
+		die()
+	
+	
 	if timeout>0:
 		timeout-=delta
 	else:
@@ -22,6 +29,12 @@ func _process(delta):
 		var direction=Vector3()
 		direction-=aim[2]
 		direction = direction.normalized()
+		
+		if target!=null:
+			var r=rotate_to_target(direction)
+			rotate_x(r[1]*delta*8*age)
+			rotate_y(-r[0]*delta*8*age)
+		
 		velocity=direction*speed
 		
 		var motion=velocity*delta

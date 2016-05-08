@@ -4,15 +4,26 @@ extends "Abstract_Projectile.gd"
 var velocity=Vector3() setget _set_velocity
 var speed=40
 var power=20
-
+var age=1
 
 func set_ready():
 	set_process(true)
 	
 func _process(delta):
+	age+=delta
+	if age>20:
+		die()
+	
 	var aim = get_global_transform().basis
 	var direction=Vector3()
 	direction-=aim[2]
+	
+	if target!=null:
+		var r=rotate_to_target(direction)
+		rotate_x(r[1]*delta*8*age)
+		rotate_y(-r[0]*delta*8*age)
+	
+	
 	direction = direction.normalized()
 	velocity=direction*speed
 	
