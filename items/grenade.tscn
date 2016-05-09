@@ -5,7 +5,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.weapon_base_type = 0\n\tdata.bullet_type = 1\n\tdata.bullet_shape = 0\n\tdata.fire_rate=0.8\n\tdata.set_modifier(\"attack.split_delay\",0.5)\n"
+script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.weapon_base_type = 0\n\tdata.bullet_type = 1\n\tdata.bullet_shape = 0\n\tdata.fire_rate=0.8\n\tdata.set_modifier(\"explosion.power\",40)\n\tdata.set_modifier(\"attack.split_delay\",0.5)\n"
 
 [node name="Spatial" type="Spatial"]
 

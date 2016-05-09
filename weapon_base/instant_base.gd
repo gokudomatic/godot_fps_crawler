@@ -3,7 +3,8 @@ extends "projectile_abstract.gd"
 
 const SPLIT_STEP=PI/64
 
-onready var ray=get_node("RayCast")
+onready var ray=get_node("direction/RayCast")
+onready var direction=get_node("direction")
 var subrays=[]
 
 onready var explosion_class=null
@@ -65,6 +66,18 @@ func reset():
 		r.set_cast_to(Vector3(0,0,-1000))
 		r.set_enabled(true)
 		r.add_exception_rid(owner)
-		add_child(r)
+		direction.add_child(r)
 		r.rotate_y(delta_angle)
-		print("delta: ",delta_angle)
+
+	if data.get_modifier("attack.autoaim") or data.get_modifier("projectile.homing"):
+		set_process(true)
+	else:
+		set_process(false)
+		direction.set_transform(Transform())
+
+func _process(delta):
+	if owner.current_target!=null:
+		var t=direction.get_global_transform()
+		direction.set_global_transform(t.looking_at(owner.current_target.get_global_transform().origin,Vector3(0,1,0)))
+	else:
+		direction.set_transform(Transform())

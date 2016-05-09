@@ -31,13 +31,14 @@ func _process(delta):
 		var c=colliders[0]
 		if c.has_method("trigger_explosion"):
 			if parent.get_modifier("bomb.sticky") and c!=parent.owner:
+				var p=c.get_global_transform().xform_inv(self.get_global_transform().origin)
 				parent.remove_child(self)
 				c.add_child(self)
-				set_translation(Vector3())
+				set_translation(p)
 			else:
 				parent.explode()
 		if parent.get_modifier("bomb.sticky") and c!=parent.owner:
-			set_sleeping(true)
+			set_mode(MODE_STATIC)
 
 func explosion_blown(explosion,strength,elemental=false):
 	if parent.get_modifier("bomb.resist_explosion"):

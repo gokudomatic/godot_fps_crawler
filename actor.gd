@@ -14,6 +14,8 @@ var fly_mode=false
 var alive=true
 var current_target=null
 var current_target_2d_pos=null
+var multijump=0
+var is_using_accessory=false
 
 var bullet_regen=0
 
@@ -21,6 +23,7 @@ var weapon_base=null
 
 onready var bullet_factory=get_node("/root/Projectile_Factory") 
 onready var player_data=get_node("/root/global").player_data
+onready var camera=get_node("yaw/camera")
 
 var aim_offset=Vector3(0,1.5,0)
 
@@ -36,6 +39,7 @@ const STAIR_RAYCAST_HEIGHT=0.75
 const STAIR_RAYCAST_DISTANCE=0.58
 const STAIR_JUMP_SPEED=5
 const STAIR_JUMP_TIMEOUT=0.1
+const ZOOM_SPEED=150
 
 func _input(ie):
 	if ie.type == InputEvent.MOUSE_MOTION:
@@ -116,7 +120,7 @@ func _fly(delta):
 	if Input.is_action_pressed("quit"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		get_tree().quit()
-
+	
 	direction = direction.normalized()
 		
 	# calculate the target where the player want to move
@@ -173,6 +177,19 @@ func _walk(delta):
 	if Input.is_action_pressed("attack") and attack_timeout<=0:
 		shoot()
 	
+	is_using_accessory=Input.is_action_pressed("do_accessory")
+
+	if player_data.accessory=="zoom":
+		var fovy=camera.get_fov()
+		if is_using_accessory and fovy>10:
+			fovy=max(fovy-delta*ZOOM_SPEED,10)
+			camera.set_perspective(fovy,camera.get_znear(),camera.get_zfar())
+		elif not is_using_accessory and fovy<60:
+			fovy=min(fovy+delta*ZOOM_SPEED,60)
+			camera.set_perspective(fovy,camera.get_znear(),camera.get_zfar())
+
+
+	
 	#reset the flag for actor's movement state
 	is_moving=(direction.length()>0)
 	
@@ -197,7 +214,6 @@ func _walk(delta):
 		if is_moving and step_ray.is_colliding():
 			var step_normal=step_ray.get_collision_normal()
 			if (rad2deg(acos(step_normal.dot(Vector3(0,1,0))))< MAX_SLOPE_ANGLE):
-				print("climb stair")
 				velocity.y=STAIR_JUMP_SPEED
 				jump_timeout=STAIR_JUMP_TIMEOUT
 		
@@ -250,6 +266,13 @@ func _walk(delta):
 			velocity.y=player_data.jump_strength
 			jump_timeout=MAX_JUMP_TIMEOUT
 			on_floor=false
+			multijump=player_data.get_modifier("multijump")
+	elif Input.is_action_pressed("jump") and multijump>0 and jump_timeout<=0:
+		velocity.y=player_data.jump_strength
+		jump_timeout=MAX_JUMP_TIMEOUT
+		on_floor=false
+		multijump-=1
+		print("jumps:",multijump)
 	
 	# update the position of the raycast for stairs to where the character is trying to go, so it will cast the ray at the next loop.
 	if is_moving:

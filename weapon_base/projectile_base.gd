@@ -8,6 +8,8 @@ func shoot():
 		var bullet=bullet_pool[0]
 		bullet_pool.pop_front()
 		var transform=get_global_transform()
+		if data.get_modifier("attack.autoaim") and owner.current_target!=null:
+			transform=transform.looking_at(owner.current_target.get_global_transform().origin,Vector3(0,1,0))
 		bullet.set_transform(transform.orthonormalized())
 		bullet.reset_target()
 		owner.get_parent_spatial().add_child(bullet)

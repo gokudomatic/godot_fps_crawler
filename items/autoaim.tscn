@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://items/basis2.tscn" type="PackedScene" id=1]
-[ext_resource path="res://textures/items/homing.png" type="Texture" id=2]
+[ext_resource path="res://textures/items/autoaim.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.set_modifier(\"projectile.homing\",true)\n\tglobal.player_data.refresh_bullet_pool=true"
+script/source = "\nextends \"Abstract_Item.gd\"\n\nfunc execute():\n\tvar data=global.player_data\n\tdata.set_modifier(\"attack.autoaim\",true)\n\tglobal.player_data.refresh_bullet_pool=true"
 
 [node name="Spatial" type="Spatial"]
 

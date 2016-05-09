@@ -55,9 +55,13 @@ func _on_body_enter(body):
 		if get_modifier("bomb.sticky"):
 			sleep=true
 			if body.has_method("trigger_explosion"):
+				var p=body.get_global_transform().xform_inv(_mesh.get_global_transform().origin)
+				
 				remove_child(_mesh)
 				body.add_child(_mesh)
-				_mesh.set_translation(Vector3())
+				
+				_mesh.rotate_y(PI)
+				_mesh.set_translation(p)
 		else:
 			explode()
 		
