@@ -58,6 +58,8 @@ func _input(ie):
 func _fixed_process(delta):
 	
 	refresh_current_target()
+	if player_data.refresh_accessory:
+		reset_accessory()
 	
 	if player_data.refresh_bullet_pool:
 		player_data.refresh_bullet_pool=false
@@ -354,4 +356,7 @@ func refresh_current_target():
 				current_target_2d_pos=pos
 	
 	current_target=closest_enemy
-	
+
+func reset_accessory():
+	player_data.refresh_accessory=false
+	camera.set_perspective(60,camera.get_znear(),camera.get_zfar())

@@ -12,7 +12,8 @@ var jump_strength=9
 var hit_invincibility_timeout=0
 var hit_invincibility_max_timeout=1
 var fire_rate=3
-var accessory="zoom"
+var accessory="" setget set_accessory
+var item_to_throw=null
 
 var modifiers= {
 	"bomb.sticky":false,
@@ -36,6 +37,7 @@ var weapon_base_type=0 setget set_weapon_base_type
 
 var refresh_bullet_pool=false
 var refresh_weapon_base=false
+var refresh_accessory=false
 
 var attack_regen_speed=1
 var attack_frequency=0.1
@@ -119,3 +121,10 @@ func get_modifier(key):
 
 func set_modifier(key,value):
 	modifiers[key]=value
+
+func set_accessory(value):
+	if accessory!="" and accessory!=null:
+		item_to_throw=accessory
+	accessory=value
+	refresh_accessory=true
+	
