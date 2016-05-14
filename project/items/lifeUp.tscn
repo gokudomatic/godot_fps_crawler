@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
-[ext_resource path="res://items/basis.scn" type="PackedScene" id=1]
-[ext_resource path="res://projectiles/radial.png" type="Texture" id=2]
+[ext_resource path="res://items/ItemBody.tscn" type="PackedScene" id=1]
+[ext_resource path="res://items/basis.scn" type="PackedScene" id=2]
+[ext_resource path="res://projectiles/radial.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 
@@ -35,7 +36,7 @@ params/shader_param = 0.5
 params/glow = 0
 params/point_size = 1.0
 uv_xform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
-textures/diffuse = ExtResource( 2 )
+textures/diffuse = ExtResource( 3 )
 textures/diffuse_tc = 0
 textures/detail_tc = 0
 textures/specular_tc = 0
@@ -50,11 +51,13 @@ textures/shade_param_tc = 0
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 script/script = SubResource( 1 )
 
-[node name="item" parent="." instance=ExtResource( 1 )]
+[node name="ItemBody" parent="." instance=ExtResource( 1 )]
+
+[node name="item" parent="ItemBody" instance=ExtResource( 2 )]
 
 Modulate = Color( 0.957031, 0.168462, 0.149536, 1 )
 
-[node name="Particles" type="Particles" parent="."]
+[node name="Particles" type="Particles" parent="ItemBody"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 layers = 1
@@ -120,6 +123,6 @@ phase_2/color = Color( 0.976562, 0.0228882, 0.0228882, 0 )
 phase_3/pos = 1.0
 phase_3/color = Color( 0, 0, 0, 1 )
 
-[connection signal="body_enter" from="item" to="." method="_on_item_body_enter"]
+[connection signal="body_enter" from="ItemBody/item" to="." method="_on_item_body_enter"]
 
 

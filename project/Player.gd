@@ -13,7 +13,7 @@ var hit_invincibility_timeout=0
 var hit_invincibility_max_timeout=1
 var fire_rate=3
 var accessory="" setget set_accessory
-var item_to_throw=null
+var item_to_throw=""
 
 var modifiers= {
 	"bomb.sticky":false,

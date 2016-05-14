@@ -21,6 +21,7 @@ var bullet_regen=0
 
 var weapon_base=null
 
+onready var item_factory=get_node("/root/Item_Factory") 
 onready var bullet_factory=get_node("/root/Projectile_Factory") 
 onready var player_data=get_node("/root/global").player_data
 onready var camera=get_node("yaw/camera")
@@ -56,6 +57,10 @@ func _input(ie):
 	
 
 func _fixed_process(delta):
+	
+	if player_data.item_to_throw!=null and player_data.item_to_throw!="":
+		print("item: |",player_data.item_to_throw,"|")
+		throw_item()
 	
 	refresh_current_target()
 	if player_data.refresh_accessory:
@@ -360,3 +365,13 @@ func refresh_current_target():
 func reset_accessory():
 	player_data.refresh_accessory=false
 	camera.set_perspective(60,camera.get_znear(),camera.get_zfar())
+
+func throw_item():
+	var yaw_node=get_node("yaw/camera")
+	print(yaw_node.get_global_transform())
+	var item=item_factory.get_item(player_data.item_to_throw)
+	get_parent_spatial().add_child(item)
+	
+	item.set_global_transform(yaw_node.get_global_transform())
+	item.set_velocity(8)
+	player_data.item_to_throw=null
