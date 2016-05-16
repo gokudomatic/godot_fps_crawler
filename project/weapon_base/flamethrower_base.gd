@@ -8,10 +8,13 @@ func set_owner(value):
 	.set_owner(value)
 
 func shoot():
-	get_node("flame").set_emitting(!get_node("flame").is_emitting())
+	get_node("flame").set_emitting(true)
 	set_fixed_process(get_node("flame").is_emitting())
 	
 	return true
+
+func stop_shoot():
+	get_node("flame").set_emitting(false)
 
 func _fixed_process(delta):
 	for body in get_node("Area").get_overlapping_bodies():

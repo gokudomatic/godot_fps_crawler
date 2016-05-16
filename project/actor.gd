@@ -16,6 +16,7 @@ var current_target=null
 var current_target_2d_pos=null
 var multijump=0
 var is_using_accessory=false
+var is_attacking=false
 
 var bullet_regen=0
 
@@ -59,7 +60,6 @@ func _input(ie):
 func _fixed_process(delta):
 	
 	if player_data.item_to_throw!=null and player_data.item_to_throw!="":
-		print("item: |",player_data.item_to_throw,"|")
 		throw_item()
 	
 	refresh_current_target()
@@ -73,7 +73,7 @@ func _fixed_process(delta):
 			player_data.refresh_weapon_base=false
 			weapon_base.queue_free()
 			weapon_base=bullet_factory.get_base(player_data.weapon_base_type)
-			get_node("yaw/camera/weapon/shoot-point").add_child(weapon_base)
+			get_node("yaw/camera/shoot-point").add_child(weapon_base)
 			weapon_base.owner=self
 		
 		weapon_base.reset()
@@ -92,7 +92,7 @@ func _fixed_process(delta):
 func _ready():
 	
 	weapon_base=bullet_factory.get_base(player_data.weapon_base_type)
-	get_node("yaw/camera/weapon/shoot-point").add_child(weapon_base)
+	get_node("yaw/camera/shoot-point").add_child(weapon_base)
 	weapon_base.owner=self
 	
 	get_node("yaw/camera/actionRay").add_exception(self)
@@ -183,6 +183,10 @@ func _walk(delta):
 		get_tree().quit()
 	if Input.is_action_pressed("attack") and attack_timeout<=0:
 		shoot()
+		is_attacking=true
+	elif is_attacking and not Input.is_action_pressed("attack"):
+		is_attacking=false
+		stop_shoot()
 	
 	is_using_accessory=Input.is_action_pressed("do_accessory")
 
@@ -325,6 +329,9 @@ func _on_ladders_body_exit( body ):
 func shoot():
 	if weapon_base.shoot():
 		attack_timeout=1.0/player_data.fire_rate
+
+func stop_shoot():
+	weapon_base.stop_shoot()
 
 func hit(source,special=false):
 	player_data.hit(30)

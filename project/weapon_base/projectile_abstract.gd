@@ -13,6 +13,9 @@ func set_owner(value):
 func shoot():
 	return false
 
+func stop_shoot():
+	pass
+
 func regenerate():
 	pass
 

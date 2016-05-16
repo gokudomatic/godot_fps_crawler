@@ -35,8 +35,8 @@ var bullet_shape=0 setget set_bullet_shape
 var weapon_base_type=0 setget set_weapon_base_type
 
 
-var refresh_bullet_pool=false
-var refresh_weapon_base=false
+var refresh_bullet_pool=true
+var refresh_weapon_base=true
 var refresh_accessory=false
 
 var attack_regen_speed=1
@@ -109,6 +109,7 @@ func set_bullet_type(value):
 	refresh_bullet_pool=true
 
 func set_weapon_base_type(value):
+	print(value)
 	weapon_base_type=value
 	refresh_bullet_pool=true
 	refresh_weapon_base=true

@@ -11,12 +11,20 @@ var hit_quotas=Dictionary()
 var buff=Dictionary()
 var elemental_timeout=0
 var elemental_frequency=0
+var hit_invincibility=false
+onready var invincibility_timer=Timer.new()
 
 var modifiers= {
 	"attack.size":1,
 	"attack.split_delay":0,
 	"projectile.homing":false
 }
+
+func _ready():
+	invincibility_timer=Timer.new()
+	add_child(invincibility_timer)
+	invincibility_timer.connect("timeout",self,"_stop_invincibility")
+	print("t")
 
 func get_data():
 	return self
@@ -27,7 +35,23 @@ func get_modifier(key):
 func set_modifier(key,value):
 	modifiers[key]=value
 
+func _set_invincibility_hit():
+	print("is invincible")
+	hit_invincibility=true
+	invincibility_timer.set_wait_time(0.5)
+	invincibility_timer.start()
+
+func _stop_invincibility():
+	print("is no more invincible")
+	hit_invincibility=false
+
 func hit(source,special=false):
+	print("ab")
+	
+	if hit_invincibility:
+		return
+	_set_invincibility_hit()
+	
 	if alive:
 		life=life-source.power
 		if life<=0:

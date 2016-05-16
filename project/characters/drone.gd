@@ -105,13 +105,18 @@ func shoot():
 
 
 func hit(source,special=false):
-	if remaining_dodges>=1 and not no_move:
+	
+	if alive and remaining_dodges>=1 and not no_move:
 		dodge(source)
 		remaining_dodges-=1
 	else:
 		if not no_move:
 			set_linear_velocity(get_linear_velocity()+source.velocity.normalized()*10)
 		if alive:
+			if hit_invincibility:
+				return
+			_set_invincibility_hit()
+	
 			life=life-source.power
 			
 			if life<=0:
@@ -123,7 +128,8 @@ func hit(source,special=false):
 				create_sleep_action()
 				
 			
-	change_target(source)
+	if alive:
+		change_target(source)
 	
 	if special and alive:
 		hit_special(source,special)
@@ -277,6 +283,7 @@ func die():
 	.die()#alive=false
 	
 func dodge(source):
+	print("dodging")
 	var factor=1
 	if randi()%2==0:
 		factor=-1
