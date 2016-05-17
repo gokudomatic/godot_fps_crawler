@@ -109,7 +109,6 @@ func set_bullet_type(value):
 	refresh_bullet_pool=true
 
 func set_weapon_base_type(value):
-	print(value)
 	weapon_base_type=value
 	refresh_bullet_pool=true
 	refresh_weapon_base=true

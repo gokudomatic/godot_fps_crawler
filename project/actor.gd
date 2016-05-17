@@ -283,7 +283,6 @@ func _walk(delta):
 		jump_timeout=MAX_JUMP_TIMEOUT
 		on_floor=false
 		multijump-=1
-		print("jumps:",multijump)
 	
 	# update the position of the raycast for stairs to where the character is trying to go, so it will cast the ray at the next loop.
 	if is_moving:
@@ -375,7 +374,6 @@ func reset_accessory():
 
 func throw_item():
 	var yaw_node=get_node("yaw/camera")
-	print(yaw_node.get_global_transform())
 	var item=item_factory.get_item(player_data.item_to_throw)
 	get_parent_spatial().add_child(item)
 	

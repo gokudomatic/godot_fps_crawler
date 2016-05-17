@@ -2,11 +2,14 @@
 extends "projectile_abstract.gd"
 
 const laser_class=preload("res://projectiles/laser.tscn")
+const bolt_class=preload("res://projectiles/thunderbolt.tscn")
 const SPLIT_STEP=PI/64
 
 onready var direction=get_node("direction")
+var main_ray=null
 var rays=[]
 
+var ray_class=laser_class
 var looking_away=false
 var power=1
 var velocity=Vector3()
@@ -18,7 +21,7 @@ func shoot():
 	var special=false
 #	if explosion_class != null and randi()%data.get_modifier("attack.elemental_chance") ==0 :
 #		special=true
-	
+	_shoot_ray(main_ray,special)
 	for r in rays:
 		_shoot_ray(r,special)
 	
@@ -34,6 +37,7 @@ func _shoot_ray(r,special):
 			object.hit(self,special)
 
 func stop_shoot():
+	main_ray.activate(false)
 	for r in rays:
 		r.activate(false)
 
@@ -41,28 +45,43 @@ func reset():
 	if data.get_modifier("attack.elemental_impact")=="explosion":
 		data.set_modifier("attack.elemental_impact","fire")
 
-		
+	ray_class=bullet_factory.get_laser_class(data.bullet_type)
+	
+	if main_ray!=null:
+		main_ray.queue_free()
+	
+	main_ray=ray_class.instance()
+	main_ray.owner=owner
+	main_ray.add_exception_rid(owner)
+	direction.add_child(main_ray)
+	
 	var i=rays.size()
 
 	var is_right=true
 	var delta_angle=-i/2*SPLIT_STEP
 
-	while i<data.get_modifier("attack.split_factor")+1:
+	var split_factor=data.get_modifier("attack.split_factor")
+	if main_ray.has_method("set_split_factor"):
 		if i>0:
+			for r in rays:
+				r.queue_free()
+		main_ray.set_split_factor(split_factor)
+	else:
+		while i<split_factor:
 			if is_right:
 				delta_angle=-delta_angle+SPLIT_STEP
 			else:
 				delta_angle=-delta_angle
 			is_right=!is_right
-		
-		var r=laser_class.instance()
-		r.owner=owner
-		rays.append(r)
-		r.add_exception_rid(owner)
-		direction.add_child(r)
-		if i>0:
+			
+			var r=ray_class.instance()
+			r.owner=owner
+			rays.append(r)
+			r.add_exception_rid(owner)
+			direction.add_child(r)
 			r.rotate_y(delta_angle)
-		i+=1
+			r.set_translation(Vector3(delta_angle,0,0))
+			i+=1
 
 	if data.get_modifier("attack.autoaim") or data.get_modifier("projectile.homing"):
 		set_process(true)

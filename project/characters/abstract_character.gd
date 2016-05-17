@@ -24,7 +24,6 @@ func _ready():
 	invincibility_timer=Timer.new()
 	add_child(invincibility_timer)
 	invincibility_timer.connect("timeout",self,"_stop_invincibility")
-	print("t")
 
 func get_data():
 	return self

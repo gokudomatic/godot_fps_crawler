@@ -21,6 +21,10 @@ const base_instant=preload("res://weapon_base/instant_base.tscn")
 const base_flamethrower=preload("res://weapon_base/flamethrower_base.tscn")
 const base_laser=preload("res://weapon_base/laser_base.tscn")
 
+const laser_class=preload("res://projectiles/laser.tscn")
+const bolt_class=preload("res://projectiles/thunderbolt.tscn")
+
+
 func _ready():
 	pass
 
@@ -106,3 +110,9 @@ func get_impact_explosion_class(type):
 		return explosion1
 	else:
 		return null
+
+func get_laser_class(type):
+	if type==1:
+		return bolt_class
+	else:
+		return laser_class
