@@ -6,14 +6,13 @@ const VELOCITY_ACCEL=0.05
 const TARGET_DISTANCE=2
 const SHOOT_RECHARGE_TIME=1
 const MAX_LIFE=100
-const WAYPOINT_ERROR_DELTA=1
+const WAYPOINT_ERROR_DELTA=2
 const WAYPOINT_MAX_TIMEOUT=5
 
 var going_backward=false
 var aiming_at_target=false
 var target_ray=null
 var collision_ray=null
-var current_target=null
 var player=null
 var action_timeout=0
 var can_see_target=false
@@ -22,11 +21,11 @@ var current_direction=Vector3()
 var current_waypoint=null
 var current_path=null
 var distance_to_collision=0
-var alive=true
 var no_move=false
-var hit_quotas=Dictionary()
 var waypoint_timeout=0
 var model=null
+export(String) var im_name=""
+export(String) var impoint_name=""
 
 var m = FixedMaterial.new()
 
@@ -36,7 +35,6 @@ const random_angle_a=float(355284801)/float(256000000)
 
 var aim_offset=Vector3()
 
-var life=MAX_LIFE
 var current_action={
 	name="",
 	shoot=false,
@@ -186,11 +184,11 @@ func do_current_action(state):
 	var speed=state.get_angular_velocity().length()*0.1+vel_speed;
 	model.set_walk_speed(speed)
 
-func calculate_destination():
+func calculate_destination(force_recalculate=false):
 	var offset=Vector3(0,0,0)
 	
 	if current_target!=null and navmesh!=null:
-		if current_waypoint==null or (current_waypoint-get_translation()).length()<WAYPOINT_ERROR_DELTA or waypoint_timeout<=0:
+		if force_recalculate or current_waypoint==null or (current_waypoint-get_translation()).length()<WAYPOINT_ERROR_DELTA or waypoint_timeout<=0:
 			_update_waypoint()
 		
 		offset=current_target.aim_offset
@@ -280,10 +278,12 @@ func _update_waypoint():
 	var local_begin=navt.xform_inv(get_global_transform().origin)
 	var local_end=navt.xform_inv(current_target.get_global_transform().origin)
 	
+	#calculate path
 	var begin=navmesh.get_closest_point(local_begin)
 	var end=navmesh.get_closest_point(local_end)
 	var p=navmesh.get_simple_path(begin,end, true)
 	
+	#process path
 	var path=Array(p)
 	
 	if current_path==null or current_path.size()<3:
@@ -311,7 +311,24 @@ func _update_waypoint():
 			current_waypoint=navt.xform(current_path[1])
 		else:
 			current_path=Array(p)
-			current_waypoint=navt.xform(current_path[1])
+			if(current_path.size()>=2):
+				current_waypoint=navt.xform(current_path[1])
+	
+	if im_name!="":
+		var im=get_parent().get_node(im_name)
+		im.clear()
+		im.begin(Mesh.PRIMITIVE_POINTS,null)
+		im.add_vertex(begin)
+		im.add_vertex(end)
+		im.end()
+		im.begin(Mesh.PRIMITIVE_LINE_STRIP,null)
+		for x in p:
+			im.add_vertex(x)
+		im.end()
+	
+	if impoint_name!="":
+		var n=get_parent().get_node(impoint_name)
+		n.set_translation(current_waypoint)
 	
 	waypoint_timeout=WAYPOINT_MAX_TIMEOUT
 
@@ -321,3 +338,4 @@ func attack():
 
 func end_attack():
 	action_timeout=0
+	calculate_destination(true)

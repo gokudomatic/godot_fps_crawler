@@ -8,7 +8,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "\nextends Spatial\n\nonready var player=get_node(\"player\")\nonready var cursor=get_node(\"gui/visor\")\n\nfunc _ready():\n\tget_node(\"/root/global\").player_data.shield_hud=get_node(\"gui/shield_bar\")\n\tset_process(true)\n\nfunc _process(delta):\n\t\n\tif player.current_target!=null:\n\t\tcursor.set_modulate(Color(0,0.670588,0))\n\telse:\n\t\tcursor.set_modulate(Color(0.952941,0.670588,0.227451))\n\n\n"
+script/source = "\nextends Spatial\n\nonready var player=get_node(\"player\")\nonready var cursor=get_node(\"gui/visor\")\n\nfunc _ready():\n\t\n\tget_node(\"/root/global\").player_data.shield_hud=get_node(\"gui/shield_bar\")\n\tset_process(true)\n\nfunc _process(delta):\n\t\n\tif player.current_target!=null:\n\t\tcursor.set_modulate(Color(0,0.670588,0))\n\telse:\n\t\tcursor.set_modulate(Color(0.952941,0.670588,0.227451))\n\n\n"
 
 [sub_resource type="Environment" id=2]
 
@@ -110,6 +110,7 @@ margin/top = 8.0
 margin/right = 91.0
 margin/bottom = 91.0
 texture = ExtResource( 3 )
+stretch_mode = 0
 
 [node name="visor" type="TextureFrame" parent="gui"]
 
@@ -127,6 +128,7 @@ margin/right = 0.0
 margin/bottom = 0.0
 texture = ExtResource( 4 )
 modulate = Color( 0.952941, 0.670588, 0.227451, 1 )
+stretch_mode = 0
 
 [node name="shield_bar" parent="gui" instance=ExtResource( 5 )]
 
