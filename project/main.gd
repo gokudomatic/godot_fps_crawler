@@ -26,6 +26,7 @@ func _ready():
 	for m in map_rooms:
 		if not m.resource in loaded_templates:
 			loaded_templates[m.resource]=load("res://rooms/"+m.resource)
+			print("res://rooms/"+m.resource)
 	
 	load_first_room()
 
@@ -90,6 +91,7 @@ func load_room_npc(room):
 		if navmesh!=null:
 			if randi()%2==0:
 				npc=walker_class.instance()
+#				npc=drone_class.instance()
 			else:
 				npc=drone_class.instance()
 			npc.navmesh=navmesh

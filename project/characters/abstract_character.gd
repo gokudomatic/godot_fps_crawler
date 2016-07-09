@@ -3,6 +3,7 @@ extends RigidBody
 
 const MAX_LIFE=100
 const ELEMENTAL_MAX_FREQUENCY=0.5
+const UP=Vector3(0,1,0)
 
 onready var life=MAX_LIFE
 var alive=true
@@ -13,6 +14,7 @@ var elemental_timeout=0
 var elemental_frequency=0
 var hit_invincibility=false
 onready var invincibility_timer=Timer.new()
+var navmesh=null
 
 var modifiers= {
 	"attack.size":1,

@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=1]
+
+[ext_resource path="res://rooms/abstract_room.gd" type="Script" id=1]
+[ext_resource path="res://rooms/tileset/room1.res" type="MeshLibrary" id=2]
+
+[sub_resource type="BoxShape" id=1]
+
+extents = Vector3( 8, 4, 8 )
+
+[node name="room" type="Spatial"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+script/script = ExtResource( 1 )
+
+[node name="connector-S1" type="Spatial" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 8 )
+
+[node name="entry" type="Area" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+input/ray_pickable = false
+input/capture_on_drag = false
+shape_count = 1
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
+shapes/0/trigger = false
+space_override = 0
+gravity_point = false
+gravity_distance_scale = 0.0
+gravity_vec = Vector3( 0, -1, 0 )
+gravity = 9.8
+linear_damp = 0.1
+angular_damp = 1.0
+priority = 0.0
+monitoring = true
+monitorable = true
+collision/layers = 1
+collision/mask = 1
+
+[node name="CollisionShape" type="CollisionShape" parent="entry"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="Navigation" type="Navigation" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+up_vector = Vector3( 0, 1, 0 )
+
+[node name="GridMap" type="GridMap" parent="Navigation"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1 )
+theme/theme = ExtResource( 2 )
+theme/bake = false
+lighting/bake = false
+cell/size = 2.0
+cell/octant_size = 4
+cell/center_x = true
+cell/center_y = true
+cell/center_z = true
+cell/scale = 1.0
+data = { "cells":IntArray( 3, 1, 1048605, 65531, 1, -1609170915, 131075, 1, 1048605, 196603, 1, -1609170915, 196608, 1, 655370, 196610, 1, 655370, 262140, 1, 655370, 262142, 1, 655370, -131072, 1, -1610612725, -131070, 1, 11, -65540, 1, 11, -65538, 1, 11, 3, 3, 1048605, 65531, 3, 1441821, 131075, 3, 1048605, 196603, 3, 1441821, 196608, 3, -1609957366, 196610, 3, 655370, 262140, 3, 655370, 262142, 3, 655370, -131072, 3, 11, -131070, 3, -1610612725, -65540, 3, 11, -65538, 3, 11, 2, 4, -1610612707, 65532, 4, 29, 65534, 4, 29, 131072, 4, 29, 131074, 4, 29, 196604, 4, 29, 196606, 4, 29, 0, 65532, 655389, 2, 65532, 655389, 65532, 65532, 655389, 65534, 65532, 655389, 131072, 65532, 655389, 131074, 65532, 655389, 196604, 65532, 655389, 196606, 65532, 655389, 3, 65533, 1048605, 65531, 65533, 1441821, 131075, 65533, 1048605, 196603, 65533, 1441821, 196608, 65533, 655370, 196610, 65533, 655370, 262140, 65533, 655370, 262142, 65533, 655370, -131072, 65533, 11, -131070, 65533, 11, -65540, 65533, -1610612725, -65538, 65533, 11, 3, 65535, 1048605, 65531, 65535, 1441821, 131075, 65535, 1048605, 196603, 65535, 1441821, 196608, 65535, 655370, 196610, 65535, 655370, 262140, 65535, -1609957366, 262142, 65535, -1609957366, -131072, 65535, 11, -131070, 65535, 11, -65540, 65535, -1610612725, -65538, 65535, 11 ) }
+__meta__ = { "_editor_clip_":0, "_editor_floor_":Vector3( -5, 3, 3 ) }
+
+[node name="spawn-1" type="Spatial" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.94059, 1.7194, -4.02117 )
+
+[connection signal="body_enter" from="entry" to="." method="_on_entry_body_enter"]
+
+

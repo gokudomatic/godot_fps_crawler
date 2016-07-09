@@ -1,0 +1,104 @@
+[gd_scene load_steps=5 format=1]
+
+[ext_resource path="res://actor.gd" type="Script" id=1]
+[ext_resource path="res://weapons/weapon.scn" type="PackedScene" id=2]
+
+[sub_resource type="CapsuleShape" id=2]
+
+radius = 0.6
+height = 0.8
+
+[sub_resource type="RayShape" id=1]
+
+length = 0.4
+
+[node name="actor" type="KinematicBody" groups=[ "player" ]]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+input/ray_pickable = true
+input/capture_on_drag = false
+shape_count = 1
+shapes/0/shape = SubResource( 2 )
+shapes/0/transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.4, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+collide_with/static = true
+collide_with/kinematic = true
+collide_with/rigid = true
+collide_with/character = true
+collision/margin = 0.001
+script/script = ExtResource( 1 )
+__meta__ = { "__editor_plugin_screen__":"3D" }
+
+[node name="body" type="CollisionShape" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.4, 0 )
+shape = SubResource( 2 )
+trigger = false
+_update_shape_index = 0
+
+[node name="leg" type="CollisionShape" parent="body"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = -1
+
+[node name="yaw" type="Spatial" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+
+[node name="camera" type="Camera" parent="yaw"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0 )
+projection = 0
+fov = 60.0
+near = 0.1
+far = 1000.0
+keep_aspect = 1
+current = true
+visible_layers = 1048575
+environment = null
+h_offset = 0.0
+v_offset = 0.0
+
+[node name="actionRay" type="RayCast" parent="yaw/camera"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -2 )
+layer_mask = 1
+type_mask = 15
+
+[node name="weapon" parent="yaw/camera" instance=ExtResource( 2 )]
+
+transform/local = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.1, -0.3 )
+
+[node name="shoot-point" type="Spatial" parent="yaw/camera"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -0.377026 )
+
+[node name="ray" type="RayCast" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.8, 0 )
+layer_mask = 1
+type_mask = 15
+
+[node name="stepRay" type="RayCast" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.58 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+layer_mask = 1
+type_mask = 15
+
+
