@@ -65,6 +65,7 @@ func reset():
 		i+=1
 		r.set_cast_to(Vector3(0,0,-1000))
 		r.set_enabled(true)
+		r.set_layer_mask(ray.get_layer_mask())
 		r.add_exception_rid(owner)
 		direction.add_child(r)
 		r.rotate_y(delta_angle)

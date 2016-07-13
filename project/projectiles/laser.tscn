@@ -4,7 +4,7 @@
 [ext_resource path="res://textures/laser1.png" type="Texture" id=2]
 [ext_resource path="res://projectiles/laser_front.png" type="Texture" id=3]
 
-[sub_resource type="FixedMaterial" id=4]
+[sub_resource type="FixedMaterial" id=1]
 
 flags/visible = true
 flags/double_sided = false
@@ -42,11 +42,11 @@ textures/glow_tc = 0
 textures/normal_tc = 0
 textures/shade_param_tc = 0
 
-[sub_resource type="MaterialShader" id=6]
+[sub_resource type="MaterialShader" id=2]
 
 _code = { "fragment":"float a=0.8-abs(UV.y-0.5)*2;\n\nDIFFUSE_ALPHA=vec4(1,1,1,a*a*min(0.01,UV.x)*100);", "fragment_ofs":0, "light":"", "light_ofs":0, "vertex":"", "vertex_ofs":0 }
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=3]
 
 flags/visible = true
 flags/double_sided = false
@@ -58,9 +58,9 @@ flags/colarray_is_srgb = false
 params/blend_mode = 0
 params/depth_draw = 1
 params/line_width = 0.0
-shader/shader = SubResource( 6 )
+shader/shader = SubResource( 2 )
 
-[sub_resource type="FixedMaterial" id=5]
+[sub_resource type="FixedMaterial" id=4]
 
 flags/visible = true
 flags/double_sided = false
@@ -103,7 +103,7 @@ textures/shade_param_tc = 0
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 enabled = false
 cast_to = Vector3( 0, 0, -50 )
-layer_mask = 1
+layer_mask = 3
 type_mask = 15
 script/script = ExtResource( 1 )
 
@@ -130,7 +130,7 @@ geometry/depth_scale = false
 geometry/visible_in_all_rooms = false
 geometry/use_baked_light = false
 geometry/baked_light_tex_id = 0
-material = SubResource( 4 )
+material = SubResource( 1 )
 amount = 256
 emitting = true
 visibility = AABB( -4, -4, -4, 8, 8, 8 )
@@ -185,7 +185,7 @@ _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 transform/local = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -5 )
 layers = 1
 geometry/visible = true
-geometry/material_override = SubResource( 7 )
+geometry/material_override = SubResource( 3 )
 geometry/cast_shadow = 1
 geometry/receive_shadows = true
 geometry/range_begin = 0.0
@@ -219,7 +219,7 @@ geometry/depth_scale = false
 geometry/visible_in_all_rooms = false
 geometry/use_baked_light = false
 geometry/baked_light_tex_id = 0
-material = SubResource( 5 )
+material = SubResource( 4 )
 amount = 16
 emitting = false
 visibility = AABB( -4, -4, -4, 8, 8, 8 )

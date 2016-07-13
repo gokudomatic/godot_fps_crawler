@@ -11,6 +11,8 @@ var map_rooms=[]
 var map_doors={}
 var test1={}
 
+var current_nb_npc=0
+
 const map_builder_class=preload("res://rooms/map_builder.gd")
 const drone_class=preload("res://characters/drone.scn")
 const walker_class=preload("res://characters/actor_escarabajo.scn")
@@ -91,7 +93,6 @@ func load_room_npc(room):
 		if navmesh!=null:
 			if randi()%2==0:
 				npc=walker_class.instance()
-#				npc=drone_class.instance()
 			else:
 				npc=drone_class.instance()
 			npc.navmesh=navmesh
@@ -103,7 +104,13 @@ func load_room_npc(room):
 		available_points.remove(id)
 		var sp=room.get_node(sp_name)
 		var t=sp.get_global_transform()
-		npc.set_translation(t.origin)
+		if sp.has_method("get_radius"):
+			var d=randf()*sp.get_radius()
+			var v=Vector3(0,0,d).rotated(Vector3(0,1,0),randf()*2*PI)
+			print("radius: ",sp.get_radius())
+			npc.set_translation(t.origin+v)
+		else:
+			npc.set_translation(t.origin)
 		add_child(npc)
 
 func _load_contingent_rooms(origin_room):
@@ -191,3 +198,18 @@ func player_enter_room(room):
 		contingent_rooms.append(current_room)
 		current_room=room
 		contingent_rooms.erase(room)
+		if not room.map_data.cleared:
+			_set_doors_lock(true)
+			current_nb_npc=room.map_data.nb_npc
+
+func _set_doors_lock(is_locked):
+	for i in map_doors:
+		var d=map_doors[i]
+		d.set_lock(is_locked)
+
+func dec_nb_npc():
+	current_nb_npc-=1
+	if current_nb_npc<=0:
+		_set_doors_lock(false)
+		current_room.map_data.nb_npc=0
+		current_room.map_data.cleared=true

@@ -37,17 +37,14 @@ func set_modifier(key,value):
 	modifiers[key]=value
 
 func _set_invincibility_hit():
-	print("is invincible")
 	hit_invincibility=true
 	invincibility_timer.set_wait_time(0.5)
 	invincibility_timer.start()
 
 func _stop_invincibility():
-	print("is no more invincible")
 	hit_invincibility=false
 
 func hit(source,special=false):
-	print("ab")
 	
 	if hit_invincibility:
 		return
@@ -62,9 +59,13 @@ func hit(source,special=false):
 			# hurt
 			#change quota
 			create_sleep_action()
+			_get_hurt()
 			
 		change_target(source)
 		hit_special(source,special)
+
+func _get_hurt():
+	pass
 
 func hit_special(source,special,factor=1):
 	elemental_timeout=15
@@ -121,7 +122,7 @@ func create_sleep_action():
 func die():
 	alive=false
 	stop_elemental()
-
+	get_parent().dec_nb_npc()
 # elementals
 
 func _process_elemental(delta):

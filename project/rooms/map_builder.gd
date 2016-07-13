@@ -80,7 +80,8 @@ func step2():
 			entries=[],
 			nb_npc=n_npc,
 			free_connectors=free_connectors,
-			spawn_points=room_template.spawn_points
+			spawn_points=room_template.spawn_points,
+			cleared=(n_npc==0)
 		}
 		
 	while to_process.size()>0:
@@ -126,7 +127,8 @@ func step2():
 					entries=[],
 					nb_npc=0,
 					free_connectors=joint_connectors,
-					spawn_points=[]
+					spawn_points=[],
+					cleared=true
 				}
 				final_map.append(temp_link)
 				

@@ -38,6 +38,8 @@ onready var ground_sensor_r=get_node("ray_ground_right")
 var old_sensor_status_l=false
 var old_sensor_status_r=false
 
+onready var elemental=get_node("elemental")
+
 var m = FixedMaterial.new()
 const random_angle_a=float(355284801)/float(256000000)
 var aim_offset=Vector3()
@@ -131,7 +133,6 @@ func do_current_action(state):
 	var txt_temp_wpt="false"
 	if is_temp_waypoint:
 		txt_temp_wpt="true"
-	get_tree().get_current_scene().get_node("CanvasLayer/label_sensor_left").set_text(txt_temp_wpt)
 
 	var current_t=get_node("yaw").get_global_transform()
 	var current_z=current_t.basis.z
@@ -251,7 +252,10 @@ func calculate_destination(force_recalculate=false):
 		
 		var a=(randf()*2-1)*PI
 		var candidate_dir=Vector3(0,0,-2).rotated(Vector3(0,1,0),a)
-		current_waypoint=navmesh.get_closest_point(curr_pos+candidate_dir)
+		if navmesh!=null:
+			current_waypoint=navmesh.get_closest_point(curr_pos+candidate_dir)
+		else:
+			current_waypoint=curr_pos+candidate_dir
 		waypoint_timeout=WAYPOINT_MAX_TIMEOUT
 	
 	var old_direction=current_direction
@@ -314,11 +318,12 @@ func create_attack_target_action():
 	attack()
 
 func die():
-	#set_mode(MODE_RIGID) # set ragdoll mode
+	set_mode(MODE_STATIC) # set ragdoll mode
 	set_use_custom_integrator(false)
 	set_layer_mask(1024)
 	alive=false
 	model.die()
+	.die()
 
 func _update_waypoint(reached_wpt):
 	var current_t=get_node("yaw").get_global_transform()
@@ -430,3 +435,20 @@ func check_ground_sensor(sensor):
 		return dot < 0.4 or (dot==1 and len>4)
 	else:
 		return true
+		
+func ignite(amount):
+	.ignite(amount)
+	elemental.mode=1
+	elemental.strength=buff["damage.fire"]
+
+func melt(amount):
+	.melt(amount)
+	elemental.mode=2
+	elemental.strength=buff["damage.acide"]
+
+func stop_elemental():
+	.stop_elemental()
+	elemental.mode=0
+
+func _get_hurt():
+	model.hit()
