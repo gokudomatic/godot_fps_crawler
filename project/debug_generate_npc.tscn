@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "\nextends Spatial\n\n\nvar drone_class=preload(\"res://characters/drone.scn\")\nvar esca_class=preload(\"res://characters/actor_escarabajo.scn\")\n\nvar npc=[]\nvar seednr=0\n\nvar npc_positions={}\n\nexport(String) var nav_name=\"Navigation\"\nexport(String) var spawn_name=\"spawn-1\"\n\nfunc _input(event):\n\tif event.is_action_released(\"use\"):\n\t\tfor n in npc:\n\t\t\tn.queue_free()\n\t\tnpc.clear()\n\t\tnpc_positions={}\n\t\t\n\t\tfor i in range(50):\n\t\t\tvar n=reroll()\n\t\t\tnpc.append(n)\n\t\t\n\nfunc _ready():\n\tset_process_input(true)\n\trandomize()\n\t\n\tfor i in range(50):\n\t\tvar n=reroll()\n\t\tnpc.append(n)\n\t\nfunc reroll():\n\t\n\tvar nav=get_parent_spatial().get_node(nav_name)\n\tvar spawn=get_parent_spatial().get_node(spawn_name)\n\t\n\tvar pos_npc1\n\tvar pos_found=false\n\tvar iteration=0\n\tvar key=null\n\twhile(not pos_found and iteration<100):\n\t\titeration+=1\n\t\tvar t=spawn.get_global_transform()\n\t\tvar d=randf()*spawn.get_shape().get_radius()\n\t\tvar v=Vector3(0,0,d).rotated(Vector3(0,1,0),randf()*2*PI)\n\t\tvar pos_npc=t.origin+v\n\t\t\n\t\t# align to grid\n\t\tpos_npc.x=floor(pos_npc.x/4)*4+2\n\t\tpos_npc.z=floor(pos_npc.z/4)*4+2\n\t\t\n\t\tkey=str(pos_npc.x)+\"_\"+str(pos_npc.z)\n\t\tif not npc_positions.has(key):\n\t\t\tpos_npc1=nav.get_closest_point(pos_npc)\n\t\t\tvar dist=sqrt(pow(pos_npc.x-pos_npc1.x,2)+pow(pos_npc.z-pos_npc1.z,2))\n\t\t\tpos_found=dist==0\n\t\n\tnpc_positions[key]=true\n\tvar drone=esca_class.instance()\n\tdrone.set_global_transform(Transform(Matrix3(),pos_npc1))\n\tadd_child(drone)\n\treturn drone\n\n\nfunc _rerand(var nb):\n\tseed(1)\n\tfor i in range(nb):\n\t\tvar f=randf()"
+
+[node name="generate_npc" type="Spatial"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+script/script = SubResource( 1 )
+nav_name = "Navigation"
+spawn_name = "spawn-1"
+
+

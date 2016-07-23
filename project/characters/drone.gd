@@ -33,7 +33,7 @@ onready var elemental=get_node("elemental")
 const random_angle_a=float(355284801)/float(256000000)
 
 
-var aim_offset=Vector3()
+var aim_offset=Vector3(0,1.5,0)
 
 var current_action={
 	name="",
@@ -44,7 +44,9 @@ var current_action={
 
 func _ready():
 	# Initialization here
-	player=get_tree().get_nodes_in_group("player")[0]
+	var players=get_tree().get_nodes_in_group("player")
+	if players.size()>0:
+		player=players[0]
 	target_ray=get_node("target_ray")
 	target_ray.add_exception_rid(get_rid())
 	collision_ray=get_node("collision_ray")

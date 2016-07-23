@@ -1,12 +1,19 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://rooms/abstract_room.gd" type="Script" id=1]
 [ext_resource path="res://rooms/tileset/room1.res" type="MeshLibrary" id=2]
-[ext_resource path="res://rooms/spawn_point.scn" type="PackedScene" id=3]
 
 [sub_resource type="BoxShape" id=1]
 
-extents = Vector3( 2, 2, 8 )
+extents = Vector3( 5.35859, 2, 6.97051 )
+
+[sub_resource type="SphereShape" id=2]
+
+radius = 14.6043
+
+[sub_resource type="SphereShape" id=3]
+
+radius = 13.4731
 
 [node name="room" type="Spatial"]
 
@@ -51,12 +58,12 @@ _update_shape_index = 0
 [node name="Navigation" type="Navigation" parent="."]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1 )
 up_vector = Vector3( 0, 1, 0 )
 
 [node name="GridMap" type="GridMap" parent="Navigation"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1 )
 theme/theme = ExtResource( 2 )
 theme/bake = false
 lighting/bake = false
@@ -85,13 +92,21 @@ cell/scale = 1.0
 data = { "cells":IntArray( -131072, 65529, 24 ) }
 __meta__ = { "_editor_clip_":0, "_editor_floor_":Vector3( 0, -2, 0 ) }
 
-[node name="spawn-1" parent="." instance=ExtResource( 3 )]
+[node name="spawn-1" type="CollisionShape" parent="."]
 
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75369, 0.837437, -20.5731 )
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9794, 0.419219, -19.0802 )
+shape = SubResource( 2 )
+trigger = false
+_update_shape_index = -1
 
-[node name="spawn-2" parent="." instance=ExtResource( 3 )]
+[node name="spawn-2" type="CollisionShape" parent="."]
 
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75369, 9.36272, -40.9492 )
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.12113, 10.0866, -40.8811 )
+shape = SubResource( 3 )
+trigger = false
+_update_shape_index = -1
 
 [connection signal="body_enter" from="entry" to="." method="_on_entry_body_enter"]
 

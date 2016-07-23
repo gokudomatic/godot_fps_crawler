@@ -122,7 +122,8 @@ func create_sleep_action():
 func die():
 	alive=false
 	stop_elemental()
-	get_parent().dec_nb_npc()
+	if get_parent().has_method("dec_nb_npc"):
+		get_parent().dec_nb_npc()
 # elementals
 
 func _process_elemental(delta):

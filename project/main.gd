@@ -21,6 +21,8 @@ var door_template = preload("res://rooms/door-1.scn")
 
 
 func _ready():
+	print("start")
+	
 	get_node("/root/global").player_data.shield_hud=get_node("CanvasLayer/shield_bar")
 	
 	_generate_map()
@@ -31,6 +33,17 @@ func _ready():
 			print("res://rooms/"+m.resource)
 	
 	load_first_room()
+	
+	var data=global.player_data
+	data.set_modifier("attack.elemental_impact","explosion")
+	data.set_modifier("attack.elemental_chance",1)
+	data.set_modifier("projectile.homing",true)
+	data.set_modifier("attack.autoaim",true)
+	data.set_modifier("multijump",5)
+	data.bullet_shape = 1
+	data.refresh_bullet_pool=true
+	
+	print("is ready")
 
 func _generate_map():
 	var builder=map_builder_class.new()
@@ -50,9 +63,11 @@ func make_edge(room1,room2,conn1,conn2):
 
 
 func _create_room_from_type(type):
+	print("create room")
 	return loaded_templates[type].instance()
 
 func load_first_room():
+	print("load first room")
 	var room_data=map_rooms[0]
 	var room_node=_create_room_from_type(room_data.resource)
 	current_room=room_node
@@ -65,6 +80,7 @@ func load_first_room():
 	load_room_npc(room_node)
 
 func load_room_doors(room):
+	print("load doors")
 	var room_data=room.map_data
 	for e in room_data.entries:
 		if e.id in map_doors:
@@ -81,39 +97,65 @@ func load_room_doors(room):
 		
 
 func load_room_npc(room):
+	print("load npc")
 	var room_data=room.map_data
 	var spawn_points=room_data.spawn_points
 	var available_points=[]
 	for i in spawn_points:
 		available_points.append(i)
 	var nb_npc=room_data.nb_npc
+	
+	var npc_grid={}
+	
 	for i in range(nb_npc):
 		var navmesh=room.get_navmesh()
 		var npc
 		if navmesh!=null:
-			if randi()%2==0:
+			if randi()%2==0 or true:
+				print("will create walker")
 				npc=walker_class.instance()
 			else:
+				print("will create drone")
 				npc=drone_class.instance()
 			npc.navmesh=navmesh
 		else:
 			npc=drone_class.instance()
+			
 		room.npc_list.append(npc)
 		var id=randi()%available_points.size()
 		var sp_name=available_points[id]
 		available_points.remove(id)
 		var sp=room.get_node(sp_name)
-		var t=sp.get_global_transform()
-		if sp.has_method("get_radius"):
-			var d=randf()*sp.get_radius()
-			var v=Vector3(0,0,d).rotated(Vector3(0,1,0),randf()*2*PI)
-			print("radius: ",sp.get_radius())
-			npc.set_translation(t.origin+v)
+		if sp.has_method("get_shape"):
+			var d=randf()*sp.get_shape().get_radius()
+			var pos_npc
+			if navmesh!=null:
+				var pos_npc1=null
+				# as long as the distance between the point and the map are different, search another spot
+				var iteration=0
+				while iteration<20 and (pos_npc1==null or sqrt(pow(pos_npc.x-pos_npc1.x,2)+pow(pos_npc.z-pos_npc1.z,2))!=0):
+					var v=Vector3(0,0,d).rotated(Vector3(0,1,0),randf()*2*PI)
+					pos_npc=sp.get_translation()-navmesh.get_translation()+v
+					pos_npc.x=floor(pos_npc.x/4)*4+2
+					pos_npc.z=floor(pos_npc.z/4)*4+2
+					pos_npc1=navmesh.get_closest_point(pos_npc)
+					iteration+=1
+					
+				if iteration>=20:
+					pos_npc=sp.get_global_transform().origin
+				else:
+					pos_npc=room.get_global_transform().xform(pos_npc1)
+			else:
+				var v=Vector3(0,0,d).rotated(Vector3(0,1,0),randf()*2*PI)
+				pos_npc=sp.get_global_transform().origin+v
+			
+			npc.set_global_transform(Transform(Matrix3(),pos_npc))
 		else:
-			npc.set_translation(t.origin)
+			npc.set_global_transform(Transform(Matrix3(),sp.get_global_transform().origin))
 		add_child(npc)
 
 func _load_contingent_rooms(origin_room):
+	print("load rooms")
 	var room_data=origin_room.map_data
 	for e in room_data.entries:
 		var is_room1=(e.room1==room_data)
@@ -192,6 +234,8 @@ func _remove_far_rooms(previous_room,new_room):
 		node.queue_free()
 
 func player_enter_room(room):
+	print("----------------------")
+	print(OS.get_ticks_msec(),"   enter room")
 	if room!=current_room:
 		_load_contingent_rooms(room)
 		_remove_far_rooms(current_room,room)
@@ -201,6 +245,7 @@ func player_enter_room(room):
 		if not room.map_data.cleared:
 			_set_doors_lock(true)
 			current_nb_npc=room.map_data.nb_npc
+	print("######################")
 
 func _set_doors_lock(is_locked):
 	for i in map_doors:

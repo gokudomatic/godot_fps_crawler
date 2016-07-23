@@ -1,0 +1,170 @@
+[gd_scene load_steps=7 format=1]
+
+[ext_resource path="res://rooms/tileset/room1.res" type="MeshLibrary" id=1]
+[ext_resource path="res://player.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "\nextends Spatial\n\nvar drone_class=preload(\"res://characters/drone.scn\")\nvar esca_class=preload(\"res://characters/actor_escarabajo.scn\")\n\nonready var im=get_node(\"im\")\nonready var spawn=get_node(\"spawn-1\")\nonready var nav=get_node(\"Navigation\")\n\nfunc _ready():\n\t\n\trandomize()\n\tvar t=spawn.get_global_transform()\n\tvar d=randf()*spawn.get_shape().get_radius()\n\tvar v=Vector3(0,0,d).rotated(Vector3(0,1,0),randf()*2*PI)\n\tvar pos_npc=t.origin+v\n\tprint(\"origine: \",t.origin)\n\tprint(\"v: \",v)\n\tprint(\"npc: \",pos_npc)\n\t\n\tvar pos_npc1=nav.get_closest_point(pos_npc)+nav.get_global_transform().origin\n\tprint(\"npc on navmesh: \",pos_npc1)\n\tprint(\"navmesh: \",nav.get_global_transform().origin)\n\t\n\tim.clear()\n\tim.begin(Mesh.PRIMITIVE_POINTS,null)\n\tim.add_vertex(pos_npc)\n\tim.add_vertex(pos_npc1)\n\tim.end()\n\n\tvar drone=esca_class.instance()\n\tdrone.set_translation(pos_npc1)\n\t#drone.alive=false\n\tadd_child(drone)\n\n"
+
+[sub_resource type="FixedMaterial" id=2]
+
+flags/visible = true
+flags/double_sided = false
+flags/invert_faces = false
+flags/unshaded = true
+flags/on_top = false
+flags/lightmap_on_uv2 = true
+flags/colarray_is_srgb = true
+params/blend_mode = 0
+params/depth_draw = 1
+params/line_width = 3.0
+fixed_flags/use_alpha = false
+fixed_flags/use_color_array = false
+fixed_flags/use_point_size = false
+fixed_flags/discard_alpha = false
+fixed_flags/use_xy_normalmap = false
+params/diffuse = Color( 1, 1, 1, 1 )
+params/specular = Color( 0, 0, 0, 1 )
+params/emission = Color( 0, 0, 0, 1 )
+params/specular_exp = 40
+params/detail_mix = 1.0
+params/normal_depth = 1
+params/shader = 0
+params/shader_param = 0.5
+params/glow = 0
+params/point_size = 3.0
+uv_xform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+textures/diffuse_tc = 0
+textures/detail_tc = 0
+textures/specular_tc = 0
+textures/emission_tc = 0
+textures/specular_exp_tc = 0
+textures/glow_tc = 0
+textures/normal_tc = 0
+textures/shade_param_tc = 0
+
+[sub_resource type="SphereShape" id=3]
+
+radius = 4.00701
+
+[sub_resource type="Environment" id=4]
+
+ambient_light/enabled = true
+ambient_light/color = Color( 1, 1, 1, 1 )
+ambient_light/energy = 1.0
+fxaa/enabled = false
+background/mode = 1
+background/color = Color( 0, 0, 0, 1 )
+background/energy = 1.0
+background/scale = 1.0
+background/glow = 0.0
+background/canvas_max_layer = null
+glow/enabled = false
+glow/blur_passes = 1
+glow/blur_scale = 1
+glow/blur_strength = 1
+glow/blur_blend_mode = null
+glow/bloom = 0.0
+glow/bloom_treshold = 0.5
+dof_blur/enabled = false
+dof_blur/blur_passes = 1
+dof_blur/begin = 100.0
+dof_blur/range = 10.0
+hdr/enabled = false
+hdr/tonemapper = 0
+hdr/exposure = 0.4
+hdr/white = 1.0
+hdr/glow_treshold = 0.95
+hdr/glow_scale = 0.2
+hdr/min_luminance = 0.4
+hdr/max_luminance = 8.0
+hdr/exposure_adj_speed = 0.5
+fog/enabled = false
+fog/begin = 100.0
+fog/begin_color = Color( 0, 0, 0, 1 )
+fog/end_color = Color( 0, 0, 0, 1 )
+fog/attenuation = 1.0
+fog/bg = true
+bcs/enabled = false
+bcs/brightness = 1.0
+bcs/contrast = 1.0
+bcs/saturation = 1.0
+srgb/enabled = false
+
+[node name="Spatial" type="Spatial"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+script/script = SubResource( 1 )
+
+[node name="Navigation" type="Navigation" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+up_vector = Vector3( 0, 1, 0 )
+
+[node name="GridMap" type="GridMap" parent="Navigation"]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+theme/theme = ExtResource( 1 )
+theme/bake = false
+lighting/bake = false
+cell/size = 2.0
+cell/octant_size = 4
+cell/center_x = true
+cell/center_y = true
+cell/center_z = true
+cell/scale = 1.0
+data = { "cells":IntArray( 1, 0, 655381, 65535, 0, 655372, -131071, 1, 23, -131069, 1, 23, -131067, 1, 23, -65543, 1, 23, -65541, 1, 23, -65539, 1, 23, -65537, 1, 23, -131071, 3, 23, -131069, 3, 23, -131067, 3, 23, -65543, 3, 23, -65541, 3, 23, -65539, 3, 23, -65537, 3, 23, -131071, 5, 23, -131069, 5, 23, -131067, 5, 23, -65543, 5, 23, -65541, 5, 23, -65539, 5, 23, -65537, 5, 23, -131071, 65529, 23, -131069, 65529, 23, -131067, 65529, 23, -65543, 65529, 23, -65541, 65529, 23, -65539, 65529, 23, -65537, 65529, 23, -131071, 65531, 23, -131069, 65531, 23, -131067, 65531, 23, -65543, 65531, 23, -65541, 65531, 23, -65539, 65531, 23, -65537, 65531, 23, 65535, 65532, 12, 1, 65533, 8, 65534, 65533, 1048588, -131069, 65533, 23, -131067, 65533, 23, -65543, 65533, 23, -65541, 65533, 23, -65539, 65533, 23, -1, 65533, 23, 1, 65534, 12, 2, 65535, 1441813, 65534, 65535, 1048588, 65537, 65535, 1441797, 131071, 65535, 1048584, -131069, 65535, 23, -131067, 65535, 23, -65543, 65535, 23, -65541, 65535, 23, -65539, 65535, 23 ) }
+__meta__ = { "_editor_clip_":0, "_editor_floor_":Vector3( 0, 0, 0 ) }
+
+[node name="im" type="ImmediateGeometry" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+layers = 1
+geometry/visible = true
+geometry/material_override = SubResource( 2 )
+geometry/cast_shadow = 1
+geometry/receive_shadows = true
+geometry/range_begin = 0.0
+geometry/range_end = 0.0
+geometry/extra_cull_margin = 0.0
+geometry/billboard = false
+geometry/billboard_y = false
+geometry/depth_scale = false
+geometry/visible_in_all_rooms = false
+geometry/use_baked_light = false
+geometry/baked_light_tex_id = 0
+
+[node name="spawn-1" type="CollisionShape" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.09785, -2.32354, -2.81074 )
+shape = SubResource( 3 )
+trigger = false
+_update_shape_index = -1
+
+[node name="Camera" type="Camera" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 0.642083, 0.766635, 0, -0.766635, 0.642083, 0, 13.4161, 11.5633 )
+projection = 0
+fov = 60.0
+near = 0.1
+far = 100.0
+keep_aspect = 1
+current = false
+visible_layers = 1048575
+environment = null
+h_offset = 0.0
+v_offset = 0.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+environment = SubResource( 4 )
+
+[node name="actor" parent="." instance=ExtResource( 2 )]
+
+transform/local = Transform( 0.683481, 0, -0.729969, 0, 1, 0, 0.729969, 0, 0.683481, -10.0966, 1.12976, 7.30064 )
+
+

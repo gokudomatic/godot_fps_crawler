@@ -2,11 +2,14 @@
 
 [ext_resource path="res://rooms/abstract_room.gd" type="Script" id=1]
 [ext_resource path="res://rooms/tileset/room1.res" type="MeshLibrary" id=2]
-[ext_resource path="res://rooms/spawn_point.scn" type="PackedScene" id=3]
 
 [sub_resource type="BoxShape" id=1]
 
 extents = Vector3( 8, 4, 7.36939 )
+
+[sub_resource type="SphereShape" id=2]
+
+radius = 7.84541
 
 [node name="room" type="Spatial"]
 
@@ -51,12 +54,12 @@ _update_shape_index = 0
 [node name="Navigation" type="Navigation" parent="."]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1 )
 up_vector = Vector3( 0, 1, 0 )
 
 [node name="GridMap" type="GridMap" parent="Navigation"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1 )
 theme/theme = ExtResource( 2 )
 theme/bake = false
 lighting/bake = false
@@ -69,9 +72,13 @@ cell/scale = 1.0
 data = { "cells":IntArray( 3, 1, 1048597, 65531, 1, 1441813, 131075, 1, 1048597, 196603, 1, 1441813, 196608, 1, 22, 196610, 1, 22, 262140, 1, 22, 262142, 1, 22, -131072, 1, 24, -131070, 1, 24, -65540, 1, 24, -65538, 1, 24, 3, 3, 1048597, 65531, 3, 1441813, 131075, 3, 1048597, 196603, 3, 1441813, 196608, 3, 22, 196610, 3, 22, 262140, 3, 22, 262142, 3, 22, -131072, 3, 24, -131070, 3, 24, -65540, 3, 24, -65538, 3, 24, 2, 4, 4, 65532, 4, 21, 65534, 4, 3, 131072, 4, 0, 131074, 4, 1, 196604, 4, 21, 196606, 4, 2, 0, 65532, 655381, 2, 65532, 655381, 65532, 65532, 655381, 65534, 65532, 655381, 131072, 65532, 655381, 131074, 65532, 655381, 196604, 65532, 655381, 196606, 65532, 655381, 3, 65533, 1048597, 65531, 65533, 1441813, 131075, 65533, 1048597, 196603, 65533, 1441813, 196608, 65533, 22, 196610, 65533, 22, 262140, 65533, 22, 262142, 65533, 22, -131072, 65533, 24, -131070, 65533, 24, -65540, 65533, 24, -65538, 65533, 24, 3, 65535, 1048597, 65531, 65535, 1441813, 131075, 65535, 1048597, 196603, 65535, 1441813, 196608, 65535, 22, 196610, 65535, 22, 262140, 65535, 22, 262142, 65535, 22, -131072, 65535, 24, -131070, 65535, 24, -65540, 65535, 24, -65538, 65535, 24 ) }
 __meta__ = { "_editor_clip_":0, "_editor_floor_":Vector3( -5, 2, 3 ) }
 
-[node name="spawn-1" parent="." instance=ExtResource( 3 )]
+[node name="spawn-1" type="CollisionShape" parent="."]
 
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.902909, 0 )
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+shape = SubResource( 2 )
+trigger = false
+_update_shape_index = -1
 
 [connection signal="body_enter" from="entry" to="." method="_on_entry_body_enter"]
 

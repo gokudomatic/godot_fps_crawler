@@ -42,7 +42,7 @@ onready var elemental=get_node("elemental")
 
 var m = FixedMaterial.new()
 const random_angle_a=float(355284801)/float(256000000)
-var aim_offset=Vector3()
+var aim_offset=Vector3(0,1.8,0)
 
 var current_action={
 	name="",

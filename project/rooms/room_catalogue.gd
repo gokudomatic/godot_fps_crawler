@@ -127,7 +127,7 @@ func _init():
 		size=1,
 		max_npc=1,
 		connectors=["connector-S1"],
-		spawn_points=["spawn-1"]
+		spawn_points=["spawn-1","spawn-2","spawn-3"]
 	})
 
 
