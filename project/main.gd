@@ -63,11 +63,9 @@ func make_edge(room1,room2,conn1,conn2):
 
 
 func _create_room_from_type(type):
-	print("create room")
 	return loaded_templates[type].instance()
 
 func load_first_room():
-	print("load first room")
 	var room_data=map_rooms[0]
 	var room_node=_create_room_from_type(room_data.resource)
 	current_room=room_node
@@ -80,7 +78,6 @@ func load_first_room():
 	load_room_npc(room_node)
 
 func load_room_doors(room):
-	print("load doors")
 	var room_data=room.map_data
 	for e in room_data.entries:
 		if e.id in map_doors:
@@ -97,7 +94,6 @@ func load_room_doors(room):
 		
 
 func load_room_npc(room):
-	print("load npc")
 	var room_data=room.map_data
 	var spawn_points=room_data.spawn_points
 	var available_points=[]
@@ -112,10 +108,8 @@ func load_room_npc(room):
 		var npc
 		if navmesh!=null:
 			if randi()%2==0 or true:
-				print("will create walker")
 				npc=walker_class.instance()
 			else:
-				print("will create drone")
 				npc=drone_class.instance()
 			npc.navmesh=navmesh
 		else:
@@ -234,8 +228,6 @@ func _remove_far_rooms(previous_room,new_room):
 		node.queue_free()
 
 func player_enter_room(room):
-	print("----------------------")
-	print(OS.get_ticks_msec(),"   enter room")
 	if room!=current_room:
 		_load_contingent_rooms(room)
 		_remove_far_rooms(current_room,room)
@@ -245,7 +237,6 @@ func player_enter_room(room):
 		if not room.map_data.cleared:
 			_set_doors_lock(true)
 			current_nb_npc=room.map_data.nb_npc
-	print("######################")
 
 func _set_doors_lock(is_locked):
 	for i in map_doors:

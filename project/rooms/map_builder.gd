@@ -26,7 +26,7 @@ func step1():
 	nb_rooms=0
 	var first_room={id=nb_rooms,linked=[]}
 	map.append(first_room)
-	var nb_entries=randi() % (catalogue.MAX_ENTRIES-1) + 1
+	var nb_entries=1 # randi() % (catalogue.MAX_ENTRIES-1) + 1
 	
 	var to_process=[]
 	for r in range(nb_entries):
@@ -43,6 +43,10 @@ func step1():
 		to_process.pop_front()
 		
 		var nb_entries1=randi() % (catalogue.MAX_ENTRIES)
+		if room.id<3:
+			nb_entries1=max(nb_entries1,2)
+			print("first rooms : ",nb_entries1)
+			
 		for r in range(nb_entries1):
 			if(nb_rooms>=max_rooms):
 				break
@@ -51,6 +55,7 @@ func step1():
 			room.linked.append(new_room)
 			map.append(new_room)
 			to_process.append(new_room)
+			print("-")
 			
 	
 	# TODO add special rooms
@@ -67,7 +72,11 @@ func step2():
 	var to_process=[map[0]]
 	
 	for room in map:
-		var room_template=catalogue.get_random_room(room.linked.size())
+		var room_template
+		if room.id==0:
+			room_template=catalogue.get_entryway_room()
+		else:
+			room_template=catalogue.get_random_room(room.linked.size())
 		var n_npc=0
 		if room_template.max_npc>0:
 			n_npc=randi()%(room_template.max_npc+1)
