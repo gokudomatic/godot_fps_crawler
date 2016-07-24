@@ -6,7 +6,7 @@ var catalogue=catalogue_class.new()
 
 var nb_rooms=0
 
-var max_rooms=100
+const max_rooms=100
 
 var map = []
 var generated_map=null
@@ -23,6 +23,8 @@ func generate():
 	return generated_map
 	
 func step1():
+	var max_probability_rooms=max_rooms*(max_rooms+1)/2
+	
 	nb_rooms=0
 	var first_room={id=nb_rooms,linked=[]}
 	map.append(first_room)
@@ -38,24 +40,27 @@ func step1():
 		map.append(room)
 		to_process.append(room)
 	
-	while(not to_process.empty() and nb_rooms<max_rooms):
-		var room=to_process[0]
-		to_process.pop_front()
+	while(nb_rooms<max_rooms):
+		var room=null
+		var chance=0
+		var chance_iteration=0
 		
-		var nb_entries1=randi() % (catalogue.MAX_ENTRIES)
-		if room.id<3:
-			nb_entries1=max(nb_entries1,2)
-			print("first rooms : ",nb_entries1)
-			
-		for r in range(nb_entries1):
-			if(nb_rooms>=max_rooms):
+		while true:
+			if room==null or room.id==0 or room.linked.size()>=catalogue.MAX_ENTRIES:
+				room=to_process[randi() % to_process.size()]
+			elif randi() % max_probability_rooms > chance and chance_iteration<20:
+				room=to_process[randi() % to_process.size()]
+				chance_iteration+=1
+			else:
 				break
-			nb_rooms+=1
-			var new_room={id=nb_rooms,linked=[room]}
-			room.linked.append(new_room)
-			map.append(new_room)
-			to_process.append(new_room)
-			print("-")
+			chance=1+catalogue.MAX_ENTRIES-room.linked.size()
+		
+		nb_rooms+=1
+		var new_room={id=nb_rooms,linked=[room]}
+		room.linked.append(new_room)
+		map.append(new_room)
+		to_process.append(new_room)
+		print("-")
 			
 	
 	# TODO add special rooms

@@ -3,18 +3,19 @@ extends Node
 
 var catalogue=[]
 
-const MAX_ENTRIES=3 # must be minimum 2 (corridor)
+const MAX_ENTRIES=4 # must be minimum 2 (corridor)
 
 func _init():
 	
-#	catalogue.append({
-#		id="room-4-1",
-#		file="room-4-1.scn",
-#		size=1,
-#		max_npc=4,
-#		connectors=["connector-E1","connector-S1","connector-W1","connector-N1"],
-#		spawn_points=["spawn-1","spawn-2","spawn-3","spawn-4","spawn-5"]
-#	})
+	catalogue.append({
+		type="normal",
+		id="room-4-1",
+		file="room-4-1.scn",
+		size=1,
+		max_npc=4,
+		connectors=["connector-E1","connector-S1","connector-W1","connector-N1"],
+		spawn_points=["spawn-1","spawn-2","spawn-3","spawn-4","spawn-5"]
+	})
 
 #	catalogue.append({
 #		id="room-4-2",
