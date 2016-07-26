@@ -6,7 +6,7 @@ var catalogue=catalogue_class.new()
 
 var nb_rooms=0
 
-const max_rooms=100
+const max_rooms=5
 
 var map = []
 var generated_map=null
@@ -26,7 +26,7 @@ func step1():
 	var max_probability_rooms=max_rooms*(max_rooms+1)/2
 	
 	nb_rooms=0
-	var first_room={id=nb_rooms,linked=[]}
+	var first_room={id=nb_rooms,linked=[],type="entryway"}
 	map.append(first_room)
 	var nb_entries=1 # randi() % (catalogue.MAX_ENTRIES-1) + 1
 	
@@ -35,7 +35,7 @@ func step1():
 		if(nb_rooms>=max_rooms):
 			break
 		nb_rooms+=1
-		var room={id=nb_rooms,linked=[first_room]}
+		var room={id=nb_rooms,linked=[first_room],type="normal"}
 		first_room.linked.append(room)
 		map.append(room)
 		to_process.append(room)
@@ -56,7 +56,7 @@ func step1():
 			chance=1+catalogue.MAX_ENTRIES-room.linked.size()
 		
 		nb_rooms+=1
-		var new_room={id=nb_rooms,linked=[room]}
+		var new_room={id=nb_rooms,linked=[room],type="normal"}
 		room.linked.append(new_room)
 		map.append(new_room)
 		to_process.append(new_room)
@@ -64,7 +64,22 @@ func step1():
 			
 	
 	# TODO add special rooms
+	create_special_room(to_process,"treasure")
+	create_special_room(to_process,"boss")
 	
+func create_special_room(to_process,t):
+	var room=null
+	
+	while true:
+		if room==null or room.id==0 or room.linked.size()>=catalogue.MAX_ENTRIES:
+			room=to_process[randi() % to_process.size()]
+		else:
+			break
+	
+	nb_rooms+=1
+	var new_room={id=nb_rooms,linked=[room],type=t}
+	room.linked.append(new_room)
+	map.append(new_room)
 	
 
 func step2():
@@ -78,8 +93,12 @@ func step2():
 	
 	for room in map:
 		var room_template
-		if room.id==0:
+		if room.type=="entryway":
 			room_template=catalogue.get_entryway_room()
+		elif room.type=="treasure":
+			room_template=catalogue.get_treasure_room()
+		elif room.type=="boss":
+			room_template=catalogue.get_boss_room()
 		else:
 			room_template=catalogue.get_random_room(room.linked.size())
 		var n_npc=0
@@ -88,6 +107,7 @@ func step2():
 		var free_connectors=[]
 		for c in room_template.connectors:
 			free_connectors.append(c)
+		
 		temp_map[room.id]={
 			id=room_template.id,
 			resource=room_template.file,
@@ -97,6 +117,7 @@ func step2():
 			spawn_points=room_template.spawn_points,
 			cleared=(n_npc==0)
 		}
+		print(temp_map[room.id])
 		
 	while to_process.size()>0:
 		var room=to_process[0]
@@ -112,6 +133,9 @@ func step2():
 			
 			to_process.push_back(r)
 			var temp_r=temp_map[r.id]
+			
+			print("temp room : ",temp_room.resource," (",temp_room.free_connectors.size(),")")
+			print("temp r : ",temp_r.resource," (",temp_r.free_connectors.size(),")")
 			
 			var iconn1=randi() % temp_room.free_connectors.size()
 			var iconn2=randi() % temp_r.free_connectors.size()

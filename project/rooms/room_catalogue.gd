@@ -181,8 +181,35 @@ func _init():
 		spawn_points=[]
 	})
 
+	catalogue.append({
+		type="treasure",
+		id="treasure-1",
+		file="treasure-room-1.tscn",
+		size=0,
+		max_npc=0,
+		connectors=["connector-S1"],
+		spawn_points=[]
+	})
+
+	catalogue.append({
+		type="boss",
+		id="boss-1-1",
+		file="boss-room-1-1.tscn",
+		size=0,
+		max_npc=0,
+		connectors=["connector-S1"],
+		spawn_points=[]
+	})
+
 func get_entryway_room():
 	return get_random_room_abstract("entryway",1)
+
+func get_treasure_room():
+	return get_random_room_abstract("treasure",1)
+
+func get_boss_room():
+	return get_random_room_abstract("boss",1)
+
 
 func get_random_room(nb_entries):
 	return get_random_room_abstract("normal",nb_entries)
