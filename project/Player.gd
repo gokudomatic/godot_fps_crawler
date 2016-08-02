@@ -21,8 +21,8 @@ var modifiers= {
 	"attack.size":1,
 	"attack.split_factor":0,
 	"attack.split_delay":0.1,
-	"attack.elemental_impact":"fire",
-	"attack.elemental_chance":1,
+	"attack.elemental_impact":"",
+	"attack.elemental_chance":8,
 	"attack.elemental_power":0.5,
 	"explosion.power":40,
 	"projectile.homing":false,
@@ -127,4 +127,3 @@ func set_accessory(value):
 		item_to_throw=accessory
 	accessory=value
 	refresh_accessory=true
-	

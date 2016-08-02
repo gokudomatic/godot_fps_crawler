@@ -1,19 +1,20 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=5 format=1]
 
 [ext_resource path="res://rooms/tileset/room1.res" type="MeshLibrary" id=1]
+[ext_resource path="res://items/portal.tscn" type="PackedScene" id=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 
 script/source = "\nextends \"res://rooms/abstract_room.gd\"\n\nfunc _ready():\n\tpass\n\t\n\t"
 
-[sub_resource type="BoxShape" id=1]
+[sub_resource type="BoxShape" id=2]
 
 extents = Vector3( 3.61997, 2, 1.38495 )
 
 [node name="room" type="Spatial"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
-script/script = SubResource( 2 )
+script/script = SubResource( 1 )
 
 [node name="connector-S1" type="Spatial" parent="."]
 
@@ -26,7 +27,7 @@ _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 input/ray_pickable = false
 input/capture_on_drag = false
 shape_count = 1
-shapes/0/shape = SubResource( 1 )
+shapes/0/shape = SubResource( 2 )
 shapes/0/transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 10.1563 )
 shapes/0/trigger = false
 space_override = 0
@@ -46,7 +47,7 @@ collision/mask = 1
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 10.1563 )
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 trigger = false
 _update_shape_index = 0
 
@@ -86,6 +87,10 @@ cell/center_z = true
 cell/scale = 1.0
 data = { "cells":IntArray( -131068, 65505, 1048599, -65540, 65505, 1048599 ) }
 __meta__ = { "_editor_clip_":0, "_editor_floor_":Vector3( 0, -2, 0 ) }
+
+[node name="Spatial" parent="." instance=ExtResource( 2 )]
+
+transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0037, 16.1698, -69.9906 )
 
 [connection signal="body_enter" from="entry" to="." method="_on_entry_body_enter"]
 

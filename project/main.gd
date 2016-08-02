@@ -36,14 +36,14 @@ func _ready():
 	
 	var data=global.player_data
 	data.set_modifier("attack.elemental_impact","explosion")
-	data.set_modifier("attack.elemental_chance",1)
+#	data.set_modifier("attack.elemental_chance",1)
 	data.set_modifier("projectile.homing",true)
 	data.set_modifier("attack.autoaim",true)
 	data.set_modifier("multijump",5)
-	data.bullet_shape = 1
+	data.bullet_type = 0
+#	data.bullet_shape = 1
 	data.refresh_bullet_pool=true
-	
-	print("is ready")
+
 
 func _generate_map():
 	var builder=map_builder_class.new()

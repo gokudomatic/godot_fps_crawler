@@ -101,7 +101,7 @@ func _ready():
 	set_process_input(true)
 
 func _enter_tree():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	pass
 
 func _exit_tree():

@@ -139,3 +139,10 @@ BirdseyeStock
 http://birdseyestock.deviantart.com/
 
 ===================================
+
+"bad explosion" from nthompson
+https://www.freesound.org/people/nthompson/sounds/47252/
+
+
+Laser gun from soundslikewillem
+https://www.freesound.org/people/soundslikewillem/sounds/190707/

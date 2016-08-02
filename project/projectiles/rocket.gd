@@ -77,6 +77,12 @@ func explode():
 		explosion.set_global_transform(t)
 		explosion.rescale(get_modifier("attack.size"))
 		owner.get_parent_spatial().add_child(explosion)
+		if explosion.has_method("play"):
+			var name=str(randi()%2+1)
+			if name.length()==1:
+				name="0"+name
+			explosion.play("explosion"+name)
+			
 	_mesh.queue_free()
 	
 	

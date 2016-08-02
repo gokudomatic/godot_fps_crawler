@@ -1,6 +1,8 @@
 
 extends "Abstract_Projectile.gd"
 
+var sfx_class=preload("res://SpacialSoundEffect.tscn")
+
 var velocity=Vector3() setget _set_velocity
 var speed=40
 var power=20
@@ -37,19 +39,26 @@ func _set_velocity(value):
 func _on_body_enter(body):
 	if body!=owner and not (body in get_tree().get_nodes_in_group("npc-wall")):
 		var special=false
-		if explosion_class != null and randi()%get_modifier("attack.elemental_chance") ==0 :
+		if explosion_class != null:
 			special=true
 		if body.has_method("hit"): 
 			body.hit(self,special)
 			
+		var t=Transform()
+		t.origin=get_global_transform().origin
+			
 		if special :
 			var explosion=explosion_class.instance()
 			explosion.owner=owner
-			var t=Transform()
-			t.origin=get_global_transform().origin
 			explosion.set_global_transform(t)
 			explosion.rescale(0.2*get_modifier("attack.size"))
 			owner.get_parent_spatial().add_child(explosion)
+		
+		if sound_name!=null:
+			var sfx=sfx_class.instance()
+			owner.get_parent_spatial().add_child(sfx)
+			sfx.set_global_transform(t)
+			sfx.play_sound(sound_name)
 		queue_free()
 
 func set_owner(value):

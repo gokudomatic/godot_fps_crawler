@@ -6,7 +6,7 @@ var catalogue=catalogue_class.new()
 
 var nb_rooms=0
 
-const max_rooms=5
+const max_rooms=3
 
 var map = []
 var generated_map=null

@@ -53,7 +53,6 @@ func get_basic_projectiles(type,amount=1):
 	var clazz=basic_laser
 	if type==1:
 		clazz=basic_ball
-	
 
 	for i in range(amount):
 		var p=basic_projectile.instance()
@@ -116,3 +115,45 @@ func get_laser_class(type):
 		return bolt_class
 	else:
 		return laser_class
+
+func get_shoot_sound(base,type,shape):
+	var sounds
+	
+	if base==0:
+		if type==1:
+			sounds=["grenade01"]
+		elif type==2:
+			sounds=["missile01"]
+		else:
+			if shape==1:
+				sounds=["laser04"]
+			else:
+				sounds=["laser01","laser02","laser03"]
+	
+	if sounds.size()>1:
+		var i=randi() % sounds.size()
+		return sounds[i]
+	else:
+		return sounds[0]
+
+func get_impact_sound(base,type,shape,elemental,is_special=true):
+	var sounds
+	print(str(is_special))
+	
+	if base==0:
+		if type==1 or type==2:
+			sounds=["explosion01","explosion02"]
+		else:
+			if is_special:
+				if elemental=="explosion":
+					sounds=["explosion03"]
+				else:
+					sounds=["thud03"]
+			else:
+				sounds=["thud03"]
+	
+	if sounds.size()>1:
+		var i=randi() % sounds.size()
+		return sounds[i]
+	else:
+		return sounds[0]

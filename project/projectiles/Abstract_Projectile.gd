@@ -4,6 +4,7 @@ extends Node
 var owner=null setget set_owner
 var _mesh=null
 var explosion_class=null
+var sound_name=null
 var alive=true
 var target=null
 
