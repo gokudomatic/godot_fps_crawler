@@ -1,6 +1,8 @@
 
 extends Node
 
+var sfx_class=preload("res://SpacialSoundEffect.tscn")
+
 var owner=null setget set_owner
 var _mesh=null
 var explosion_class=null
@@ -92,6 +94,13 @@ func rotate_to_target(direction):
 	var vx=Vector2(-direction.x,-direction.z).angle_to(Vector2(target_z.x,target_z.z))
 	var vy=direction.y-Vector2(1,0).angle_to(Vector2(1,target_z.y))
 	return [vx,vy]
+
+func create_impact_sfx():
+	if sound_name!=null:
+		var sfx=sfx_class.instance()
+		owner.get_parent_spatial().add_child(sfx)
+		sfx.set_global_transform(get_global_transform())
+		sfx.play_sound(sound_name)
 
 func set_elemental(value):
 	pass

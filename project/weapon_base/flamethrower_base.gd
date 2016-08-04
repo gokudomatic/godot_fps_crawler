@@ -1,6 +1,8 @@
 
 extends "projectile_abstract.gd"
 
+onready var sfx=get_node("sfx")
+
 var power=0
 var velocity=Vector3()
 
@@ -9,12 +11,15 @@ func set_owner(value):
 
 func shoot():
 	get_node("flame").set_emitting(true)
-	set_fixed_process(get_node("flame").is_emitting())
+	set_fixed_process(true)
+	sfx.play(bullet_factory.get_shoot_sound(2,data.bullet_type,data.bullet_shape))
 	
 	return true
 
 func stop_shoot():
 	get_node("flame").set_emitting(false)
+	set_fixed_process(false)
+	sfx.stop_all()
 
 func _fixed_process(delta):
 	for body in get_node("Area").get_overlapping_bodies():

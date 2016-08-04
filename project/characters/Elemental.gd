@@ -6,6 +6,8 @@ export(int,"None","Fire","Acide") var mode=0 setget set_mode
 export(int,1,20) var strength=1 setget set_strenght
 export(Vector3) var extend=Vector3(1,1,1) setget set_extend
 
+onready var sfx=get_node("sfx")
+
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
@@ -16,7 +18,13 @@ func set_mode(value):
 	if has_node("fire"):
 		get_node("fire").set_emitting(value==1)
 		get_node("acide").set_emitting(value==2)
-
+		
+		if sfx!=null:
+			sfx.stop_all()
+		if value==1:
+			sfx.play("fire02")
+		elif value==2:
+			sfx.play("fire03")
 
 func set_strenght(value):
 	strength=value

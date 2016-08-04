@@ -82,6 +82,8 @@ func _ready():
 
 
 func _integrate_forces(state):
+	print("life: ",life)
+	
 	if not alive:
 		return
 	
@@ -127,6 +129,7 @@ func _integrate_forces(state):
 	
 	do_current_action(state)
 	
+	_process_elemental(state.get_step())
 
 func do_current_action(state):
 	

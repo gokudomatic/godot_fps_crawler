@@ -1,11 +1,14 @@
 
 extends "projectile_abstract.gd"
 
+var sfx_class=preload("res://SpacialSoundEffect.tscn")
+
 const SPLIT_STEP=PI/64
 
 onready var ray=get_node("direction/RayCast")
 onready var direction=get_node("direction")
 var subrays=[]
+onready var sfx=get_node("sfx")
 
 onready var explosion_class=null
 
@@ -21,6 +24,8 @@ func shoot():
 	var special=false
 	if explosion_class != null and randi()%data.get_modifier("attack.elemental_chance") ==0 :
 		special=true
+	else:
+		sfx.play(bullet_factory.get_shoot_sound(1,data.bullet_type,data.bullet_shape))
 	
 	_shoot_ray(ray,special)
 	for r in subrays:
@@ -45,6 +50,13 @@ func _shoot_ray(r,special):
 			explosion.set_transform(t)
 			explosion.rescale(0.2*data.get_modifier("attack.size"))
 			owner.get_parent_spatial().add_child(explosion)
+			
+			var sound_name=bullet_factory.get_impact_sound(1,data.bullet_type,data.bullet_shape,data.get_modifier("attack.elemental_impact"),true)
+			if sound_name!=null:
+				var sfx=sfx_class.instance()
+				owner.get_parent_spatial().add_child(sfx)
+				sfx.set_global_transform(t)
+				sfx.play_sound(sound_name)
 
 func reset():
 	explosion_class=bullet_factory.get_impact_explosion_class(data.get_modifier("attack.elemental_impact"))

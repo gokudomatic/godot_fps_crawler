@@ -40,7 +40,8 @@ func _ready():
 	data.set_modifier("projectile.homing",true)
 	data.set_modifier("attack.autoaim",true)
 	data.set_modifier("multijump",5)
-	data.bullet_type = 0
+	data.weapon_base_type = 3
+	data.bullet_type = 1
 #	data.bullet_shape = 1
 	data.refresh_bullet_pool=true
 

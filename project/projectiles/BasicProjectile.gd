@@ -1,8 +1,6 @@
 
 extends "Abstract_Projectile.gd"
 
-var sfx_class=preload("res://SpacialSoundEffect.tscn")
-
 var velocity=Vector3() setget _set_velocity
 var speed=40
 var power=20

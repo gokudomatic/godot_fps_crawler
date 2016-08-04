@@ -1,6 +1,8 @@
 
 extends "projectile_abstract.gd"
 
+onready var sfx=get_node("sfx")
+
 const laser_class=preload("res://projectiles/laser.tscn")
 const bolt_class=preload("res://projectiles/thunderbolt.tscn")
 const SPLIT_STEP=PI/64
@@ -19,8 +21,13 @@ func set_owner(value):
 
 func shoot():
 	var special=false
-#	if explosion_class != null and randi()%data.get_modifier("attack.elemental_chance") ==0 :
-#		special=true
+	
+	if data.bullet_type==0:
+		if !main_ray.is_enabled():
+			sfx.play(bullet_factory.get_shoot_sound(3,data.bullet_type,data.bullet_shape))
+	elif data.bullet_type==1:
+		if not sfx.is_voice_active(0):
+			sfx.play(bullet_factory.get_shoot_sound(3,data.bullet_type,data.bullet_shape))
 	_shoot_ray(main_ray,special)
 	for r in rays:
 		_shoot_ray(r,special)
@@ -37,6 +44,7 @@ func _shoot_ray(r,special):
 			object.hit(self,special)
 
 func stop_shoot():
+	sfx.stop_all()
 	main_ray.activate(false)
 	for r in rays:
 		r.activate(false)
@@ -92,7 +100,7 @@ func reset():
 func _process(delta):
 	if owner.current_target!=null:
 		var t=direction.get_global_transform()
-		direction.set_global_transform(t.looking_at(owner.current_target.get_global_transform().origin,Vector3(0,1,0)))
+		direction.set_global_transform(t.looking_at(owner.current_target.get_global_transform().origin+owner.current_target.aim_offset,Vector3(0,1,0)))
 		looking_away=true
 	elif looking_away:
 		direction.set_transform(Transform())

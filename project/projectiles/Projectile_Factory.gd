@@ -117,7 +117,7 @@ func get_laser_class(type):
 		return laser_class
 
 func get_shoot_sound(base,type,shape):
-	var sounds
+	var sounds=[]
 	
 	if base==0:
 		if type==1:
@@ -129,15 +129,26 @@ func get_shoot_sound(base,type,shape):
 				sounds=["laser04"]
 			else:
 				sounds=["laser01","laser02","laser03"]
+	elif base==1:
+		sounds=["laser07"]
+	elif base==2:
+		sounds=["fire01"]
+	elif base==3:
+		if type==0:
+			sounds=["beam01"]
+		elif type==1:
+			sounds=["zap01"]
 	
-	if sounds.size()>1:
+	if sounds.size()==0:
+		return null
+	elif sounds.size()>1:
 		var i=randi() % sounds.size()
 		return sounds[i]
 	else:
 		return sounds[0]
 
 func get_impact_sound(base,type,shape,elemental,is_special=true):
-	var sounds
+	var sounds=[]
 	print(str(is_special))
 	
 	if base==0:
@@ -145,15 +156,22 @@ func get_impact_sound(base,type,shape,elemental,is_special=true):
 			sounds=["explosion01","explosion02"]
 		else:
 			if is_special:
-				if elemental=="explosion":
-					sounds=["explosion03"]
-				else:
-					sounds=["thud03"]
+				sounds=get_elemental_impact_sound(elemental)
 			else:
 				sounds=["thud03"]
+	elif base==1 and is_special:
+		sounds=get_elemental_impact_sound(elemental)
 	
-	if sounds.size()>1:
+	if sounds.size()==0:
+		return null
+	elif sounds.size()>1:
 		var i=randi() % sounds.size()
 		return sounds[i]
 	else:
 		return sounds[0]
+
+func get_elemental_impact_sound(elemental):
+	if elemental=="explosion":
+		return ["explosion03"]
+	else:
+		return []

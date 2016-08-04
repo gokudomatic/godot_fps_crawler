@@ -26,6 +26,8 @@ func explode():
 		explosion.set_transform(t)
 		explosion.rescale(s)
 		_mesh.get_parent_spatial().add_child(explosion)
+		
+		create_impact_sfx()
 
 	_mesh.queue_free()
 	set_fixed_process(false)

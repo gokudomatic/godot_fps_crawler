@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://characters/Elemental.gd" type="Script" id=1]
 [ext_resource path="res://explosions/fire_particle.png" type="Texture" id=2]
 [ext_resource path="res://explosions/flame3.png" type="Texture" id=3]
+[ext_resource path="res://data/sound/fire02.smp" type="Sample" id=4]
+[ext_resource path="res://data/sound/fire03.smp" type="Sample" id=5]
 
 [sub_resource type="FixedMaterial" id=1]
 
@@ -80,10 +82,18 @@ textures/glow_tc = 0
 textures/normal_tc = 0
 textures/shade_param_tc = 0
 
+[sub_resource type="SampleLibrary" id=3]
+
+samples/fire02 = { "db":0.0, "pitch":1.0, "sample":ExtResource( 4 ) }
+samples/fire03 = { "db":0.0, "pitch":1.0, "sample":ExtResource( 5 ) }
+
 [node name="elemental" type="Spatial"]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 script/script = ExtResource( 1 )
+mode = 0
+strength = 1
+extend = Vector3( 1, 1, 1 )
 
 [node name="fire" type="Particles" parent="."]
 
@@ -216,5 +226,18 @@ phase_2/pos = 1.0
 phase_2/color = Color( 0, 0, 0, 1 )
 phase_3/pos = 1.0
 phase_3/color = Color( 0, 0, 0, 1 )
+
+[node name="sfx" type="SpatialSamplePlayer" parent="."]
+
+_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+params/volume_db = 0.0
+params/pitch_scale = 1.0
+params/attenuation/min_distance = 1.0
+params/attenuation/max_distance = 100.0
+params/attenuation/distance_exp = 1.0
+params/emission_cone/degrees = 180.0
+params/emission_cone/attenuation_db = -6.0
+config/polyphony = 1
+config/samples = SubResource( 3 )
 
 

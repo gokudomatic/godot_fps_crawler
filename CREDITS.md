@@ -146,3 +146,6 @@ https://www.freesound.org/people/nthompson/sounds/47252/
 
 Laser gun from soundslikewillem
 https://www.freesound.org/people/soundslikewillem/sounds/190707/
+
+FX_26_Laser from AlienXXX
+https://www.freesound.org/people/AlienXXX/sounds/211588/
